@@ -102,7 +102,7 @@ function Projects() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
 
     const handleScroll = () => {
@@ -263,7 +263,7 @@ function Projects() {
       id="projects"
       ref={containerRef}
       className="relative px-6 md:px-16 lg:px-24"
-      style={{ backgroundColor: '#F3EDE5', height: '150vh' }}
+      style={{ backgroundColor: '#F3EDE5', height: '100vh' }}
     >
       <div className="sticky top-0 h-screen pt-20">
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">Projects</h2>
