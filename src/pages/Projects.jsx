@@ -55,6 +55,7 @@ const projects = [
     id: 1,
     title: 'Code Sensei',
     date: 'May 2025',
+    repo: 'https://github.com/JANARDHANAREDDYMS/CodeSensei',
     description: 'Built an agentic AI powered interview platform that generates personalized technical assessments by reasoning over user prompts and historical performance, using multi-agent LLM workflows with explicit role separation, contextual memory, and constrained generation.',
     bullets: [
       'Designed end-to-end CI/CD pipelines using AWS CodePipeline and CodeBuild to automatically test, build Docker images, and deploy Django microservices to EKS.',
@@ -67,6 +68,7 @@ const projects = [
     id: 2,
     title: 'NYU Enrolls',
     date: 'Dec 2025',
+    repo: 'https://github.com/JANARDHANAREDDYMS/nyuenrolls',
     description: 'Developed and optimized a course enrollment system using Django and PostgreSQL, incorporating natural language search, resulting in 30% faster enrollment processing.',
     bullets: [
       'Integrated data analytics pipelines using Pandas, scikit-learn, and seaborn on pre-registration data, enabling administrators to adjust 100+ courses per semester.',
@@ -80,6 +82,7 @@ const projects = [
     id: 3,
     title: 'Crowd Monitoring System',
     date: 'May 2024',
+    repo: 'https://github.com/JANARDHANAREDDYMS/yoloposemodel',
     description: 'Developed a deep learning system for crowd monitoring at college events by Finetuning YOLOPosev8 on biased datasets, achieving 90% mAP@0.5 for human detection.',
     bullets: [
       'Designed an automated homography pipeline, improving inter-person distance accuracy by 30% via 3D-to-2D scene mapping.',
@@ -227,6 +230,17 @@ function Projects() {
                       </span>
                     ))}
                   </div>
+
+                  <a
+                    href={project.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 mt-3 text-xs font-medium text-white/80 hover:text-white transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    View on GitHub
+                  </a>
                 </div>
 
                 {/* Mobile expand button */}
@@ -263,7 +277,7 @@ function Projects() {
       id="projects"
       ref={containerRef}
       className="relative px-6 md:px-16 lg:px-24"
-      style={{ backgroundColor: '#F3EDE5', height: '100vh' }}
+      style={{ backgroundColor: '#F3EDE5', height: `${projects.length * 100 + 100}vh` }}
     >
       <div className="sticky top-0 h-screen pt-20">
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">Projects</h2>
@@ -314,17 +328,29 @@ function Projects() {
                     )}
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
-                        style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
-                      >
-                        {techIcons[tech]}
-                        {tech}
-                      </span>
-                    ))}
+                  <div>
+                    <div className="flex flex-wrap gap-2">
+                      {project.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
+                          style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+                        >
+                          {techIcons[tech]}
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    <a
+                      href={project.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-white/70 hover:text-white transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                      View on GitHub
+                    </a>
                   </div>
                 </div>
 

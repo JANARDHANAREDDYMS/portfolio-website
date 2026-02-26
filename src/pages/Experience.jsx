@@ -1,79 +1,65 @@
-function Experience() {
-  const experiences = [
-    {
-      id: 1,
-      title: 'Software Engineer Intern',
-      company: 'Company Name',
-      duration: 'Jun 2024 - Aug 2024',
-      description: 'Description of your role and responsibilities.',
-      bullets: [
-        'Accomplishment or responsibility 1',
-        'Accomplishment or responsibility 2',
-        'Accomplishment or responsibility 3',
-      ],
-    },
-    {
-      id: 2,
-      title: 'Teaching Assistant',
-      company: 'New York University',
-      duration: 'Sep 2024 - Present',
-      description: 'Description of your role and responsibilities.',
-      bullets: [
-        'Accomplishment or responsibility 1',
-        'Accomplishment or responsibility 2',
-      ],
-    },
-    {
-      id: 3,
-      title: 'Software Lead',
-      company: 'Robotion Club',
-      duration: 'Duration',
-      description: 'Led software development initiatives for the robotics club.',
-      bullets: [
-        'Accomplishment or responsibility 1',
-        'Accomplishment or responsibility 2',
-      ],
-    },
-  ];
+const experiences = [
+  {
+    id: 1,
+    title: 'Teaching Assistant',
+    company: 'New York University',
+    location: 'New York, NY',
+    duration: 'Sep 2025 – Present',
+    description: 'Cloud Computing and Big Data (Graduate, Flagship Course)',
+    bullets: [
+      'Taught graduate level classes on NoSQL databases, Apache Kafka, and Apache Spark, delivering live demonstrations for a flagship Cloud Computing and Big Data systems course.',
+      'Mentored student teams on cloud based system design projects, including NLP driven research paper summarization and natural language based DevOps automation systems.',
+      'Guided students in designing distributed cloud architectures, containerization, data flow design, consistency trade offs, scalability considerations, and deployment strategies.',
+    ],
+  },
+  {
+    id: 2,
+    title: 'Vice President – Software',
+    company: 'Robolution Club',
+    location: '',
+    duration: 'Feb 2022 – Apr 2023',
+    description: 'Software Division',
+    bullets: [
+      'Spearheaded a 10 student team to develop a deep learning model using computer vision for object detection, achieving 97% accuracy in identifying warehouse items.',
+      'Designed system architecture, selecting and fine-tuning deep learning models for object detection, and improving warehouse navigation robots.',
+      'Enhanced cross-functional collaboration, partnering with other clubs to integrate software components across 4 projects, improving overall system functionality.',
+    ],
+  },
+];
 
+function Experience() {
   return (
     <section id="experience" className="py-20 px-6 md:px-16 lg:px-24" style={{ backgroundColor: '#F3EDE5' }}>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="mb-16">
-          <p className="text-sm tracking-widest text-gray-500 mb-2">EXPERIENCE</p>
+        <div className="mb-14">
+          <p className="text-xs tracking-widest text-gray-500 mb-2 uppercase">Experience</p>
           <h2 className="text-3xl md:text-4xl font-semibold">
-            <span className="text-gray-900">Work & </span>
-            <span style={{ color: '#00b8a9' }}>Leadership</span>
+            <span className="text-gray-900">Work &amp; </span>
+            <span style={{ color: '#4A90D9' }}>Leadership</span>
           </h2>
         </div>
 
-        {/* Experience Timeline */}
-        <div className="space-y-8">
+        {/* Two cards side by side */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {experiences.map((exp) => (
             <div
               key={exp.id}
-              className="relative pl-8 border-l-2 border-gray-300"
+              className="border border-gray-300 rounded-sm p-8"
+              style={{ backgroundColor: '#EDE8E0' }}
             >
-              {/* Timeline dot */}
-              <div className="absolute left-0 top-0 w-4 h-4 -translate-x-1/2 rounded-full bg-gray-900" />
-
-              <div className="pb-8">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                  <h3 className="text-xl font-semibold text-gray-900">{exp.title}</h3>
-                  <span className="text-sm text-gray-500">{exp.duration}</span>
-                </div>
-                <p className="text-gray-600 font-medium mb-3">{exp.company}</p>
-                <p className="text-gray-700 mb-3">{exp.description}</p>
-                <ul className="space-y-2">
-                  {exp.bullets.map((bullet, i) => (
-                    <li key={i} className="flex gap-2 text-gray-600">
-                      <span>•</span>
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <p className="text-xs tracking-widest text-gray-500 mb-2 uppercase">{exp.duration}</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-1">{exp.title}</h3>
+              <p className="text-sm font-medium text-gray-700 mb-0.5">{exp.company}{exp.location ? ` · ${exp.location}` : ''}</p>
+              <p className="text-sm text-gray-500 italic mb-4">{exp.description}</p>
+              <ul className="space-y-2">
+                {exp.bullets.map((b, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="mt-1.5 w-1 h-1 rounded-full bg-gray-500 shrink-0" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
