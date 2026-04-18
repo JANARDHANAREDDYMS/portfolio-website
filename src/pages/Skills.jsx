@@ -192,10 +192,10 @@ function Skills() {
           {/* Side Text */}
           <div className="lg:w-2/5 space-y-6 lg:pt-10">
             <p className="text-gray-700 leading-relaxed">
-              As a developer, I have experience in JavaScript, HTML, React, NodeJs, and CSS.
+              I'm a Machine Learning Engineer specializing in scalable AI systems, agentic workflows, and distributed computing. I build end-to-end ML solutions, from data pipelines with Spark and Kafka to AI agents with LangChain to production deployments on AWS and GCP. My work spans brain-computer interfaces, predictive analytics, and real-time ML applications, backed by robust backend systems using FastAPI and Node.js. Currently pursuing my MS in Computer Science at NYU, where I also TA for Big Data and Cloud Computing.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              This helps me work with the MERN stack, making me closer to becoming a Full Stack developer. My interests also lie in Machine Learning and you can find some of the projects I have done below.
+              <span className="font-medium text-gray-900">Technical expertise:</span> Python, PyTorch, TensorFlow, LangChain, PySpark, Kafka, Flink, AWS, FastAPI, Node.js, React, Docker, Kubernetes
             </p>
           </div>
         </div>

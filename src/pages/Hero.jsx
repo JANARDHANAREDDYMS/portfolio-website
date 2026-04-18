@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
+import profileImg from '../assets/profile.jpg';
 
 function Hero() {
-  const [showAvatar, setShowAvatar] = useState(true);
   const [navAtBottom, setNavAtBottom] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  const toggleImage = () => {
-    setShowAvatar(!showAvatar);
-  };
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -65,7 +61,7 @@ function Hero() {
 
       <div className="max-w-7xl mx-auto w-full">
         {/* Mobile: First screen with name, title, and picture */}
-        <div className="min-h-[calc(100vh-80px)] flex flex-col justify-center items-center lg:hidden">
+        <div className="min-h-[calc(100vh-80px)] flex flex-col justify-center items-center lg:hidden pt-24">
           {/* Name */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-semibold text-gray-900 mb-2">
@@ -76,66 +72,17 @@ function Hero() {
 
           {/* Profile Image - Mobile */}
           <div className="flex justify-center">
-              <div className="relative">
-                <div
-                  className="w-[320px] h-[320px] border-[5px] overflow-hidden relative"
-                  style={{ borderRadius: '60% 40% 45% 55% / 50% 55% 45% 50%', borderColor: '#1a2e44', backgroundColor: '#F3EDE5' }}
-                >
-                  {showAvatar ? (
-                    <img
-                      src="/avatar-placeholder.png"
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src="/profile-placeholder.png"
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  )}
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                  </div>
-                  <span className="absolute top-6 left-6 px-3 py-1.5 text-sm bg-gray-700/80 text-white rounded-md backdrop-blur-sm">
-                    Preview
-                  </span>
-                </div>
-                {/* Toggle Button */}
-                <button
-                  onClick={toggleImage}
-                  className="absolute right-0 top-1/2 translate-x-3 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors border border-gray-200"
-                  aria-label="Toggle between avatar and photo"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={`transition-transform duration-300 ${showAvatar ? '' : 'rotate-180'}`}
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </button>
-              </div>
+            <div
+              className="w-[208px] h-[260px] border-[5px] overflow-hidden"
+              style={{ borderColor: '#1a2e44', borderRadius: '16px' }}
+            >
+              <img
+                src={profileImg}
+                alt="Janardhana Reddy"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
+          </div>
         </div>
 
         {/* Mobile: About Me section (below the fold) */}
@@ -315,70 +262,16 @@ function Hero() {
           </div>
 
           {/* Right Content - Profile Image */}
-          <div className="hidden lg:flex lg:w-1/2 justify-end">
-            <div className="relative">
-              {/* Profile Image - Organic blob shape */}
-              <div
-                className="w-[320px] h-[320px] md:w-[386px] md:h-[386px] border-[5px] overflow-hidden relative"
-                style={{ borderRadius: '60% 40% 45% 55% / 50% 55% 45% 50%', borderColor: '#1a2e44', backgroundColor: '#F3EDE5' }}
-              >
-                {showAvatar ? (
-                  <img
-                    src="/avatar-placeholder.png"
-                    alt="Avatar"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                ) : (
-                  <img
-                    src="/profile-placeholder.png"
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                )}
-                {/* Fallback placeholder */}
-                <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                </div>
-
-                {/* Preview badge inside image */}
-                <span className="absolute top-6 left-6 px-3 py-1.5 text-sm bg-gray-700/80 text-white rounded-md backdrop-blur-sm">
-                  Preview
-                </span>
-              </div>
-
-              {/* Toggle Button */}
-              <button
-                onClick={toggleImage}
-                className="absolute right-0 top-1/2 translate-x-3 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors border border-gray-200"
-                aria-label="Toggle between avatar and photo"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={`transition-transform duration-300 ${showAvatar ? '' : 'rotate-180'}`}
-                >
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
+          <div className="hidden lg:flex lg:w-1/2 justify-end ">
+            <div
+              className="w-[208px] h-[600px] md:w-[320px] md:h-[380px] border-[3px] overflow-hidden mt-16 mr-8"
+              style={{ borderColor: '#172739', borderRadius: '36px' }}
+            >
+              <img
+                src={profileImg}
+                alt="Janardhana Reddy"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
           </div>
         </div>
