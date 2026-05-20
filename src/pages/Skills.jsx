@@ -99,7 +99,7 @@ function Skills() {
   };
 
   return (
-    <section id="skills" className="py-20 px-6 md:px-16 lg:px-24" style={{ backgroundColor: '#F3EDE5' }}>
+    <section id="skills" className="py-10 px-6 md:py-20 md:px-16 lg:px-24" style={{ backgroundColor: '#F3EDE5' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-16">
@@ -117,16 +117,16 @@ function Skills() {
             {skillCategories.map((category) => (
               <div key={category.title}>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{category.title}</h3>
-                <div className="relative inline-block">
+                <div className="relative w-full max-w-full lg:inline-block lg:w-auto mb-8">
                 {/* Collapsed View */}
                 <div
-                  className={`px-4 py-3 rounded-full border-2 border-gray-900 bg-transparent transition-all duration-50 ease-in-out ${
+                  className={`w-full max-w-full px-4 py-3 rounded-3xl lg:rounded-full border-2 border-gray-900 bg-transparent transition-all duration-50 ease-in-out ${
                     expandedCategories[category.title]
                       ? 'opacity-0 scale-95 absolute pointer-events-none'
                       : 'opacity-100 scale-100'
                   }`}
                 >
-                  <div className="flex gap-2 overflow-x-auto">
+                  <div className="flex flex-wrap gap-2">
                     {category.skills.map((skill) => (
                       <span
                         key={skill.name}
@@ -140,7 +140,7 @@ function Skills() {
 
                 {/* Expanded View */}
                 <div
-                  className={`px-6 py-3 rounded-2xl border-2 border-gray-900 bg-transparent transition-all duration-50 ease-in-out ${
+                  className={`w-full max-w-full px-6 py-3 rounded-2xl border-2 border-gray-900 bg-transparent transition-all duration-50 ease-in-out ${
                     expandedCategories[category.title]
                       ? 'opacity-100 scale-100'
                       : 'opacity-0 scale-95 absolute pointer-events-none'

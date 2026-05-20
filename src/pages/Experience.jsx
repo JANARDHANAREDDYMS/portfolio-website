@@ -29,7 +29,7 @@ const experiences = [
 
 function Experience() {
   return (
-    <section id="experience" className="py-20 px-6 md:px-16 lg:px-24" style={{ backgroundColor: '#F3EDE5' }}>
+    <section id="experience" className="py-10 px-6 md:py-20 md:px-16 lg:px-24" style={{ backgroundColor: '#F3EDE5' }}>
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-14">

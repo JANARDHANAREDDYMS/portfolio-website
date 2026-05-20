@@ -236,9 +236,9 @@ import { useEffect, useRef, useState } from 'react';
 
     if (isMobile) {
       return (
-        <section id="projects" className="px-4 py-12" style={{ backgroundColor: '#F3EDE5' }}>
+        <section id="projects" className="px-4 pt-6 pb-6" style={{ backgroundColor: '#F3EDE5' }}>
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Projects</h2>
-          <div className="space-y-6">
+          <div className="space-y-10">
             {projects.map((project) => {
               const isExpanded = expandedCard === project.id;
               return (
@@ -290,9 +290,7 @@ import { useEffect, useRef, useState } from 'react';
                     </a>
                   </div>
 
-                  <button onClick={() => toggleExpand(project.id)} className="absolute bottom-0 left-1/2
-  -translate-x-1/2 translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-
-  center hover:bg-gray-100 transition-all duration-300">
+                  <button onClick={() => toggleExpand(project.id)} className="absolute bottom-0 left-1/2 z-20 -translate-x-1/2 translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
   fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
   className={`text-gray-700 transition-transform duration-300 ${isExpanded ? '-rotate-90' : 'rotate-90'}`}>
@@ -379,9 +377,7 @@ import { useEffect, useRef, useState } from 'react';
                   </div>
 
                   {!isLastCard && (
-                    <button onClick={() => toggleExpand(project.id)} className="absolute right-0 top-1/2
-  translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-
-  center hover:bg-gray-100 transition-all duration-300">
+                    <button onClick={() => toggleExpand(project.id)} className="absolute right-0 top-1/2 z-20 translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-all duration-300">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
   fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
   className={`text-gray-700 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
