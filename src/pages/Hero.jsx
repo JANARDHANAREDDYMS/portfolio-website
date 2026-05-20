@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import profileImg from '../assets/profile.jpg';
+import profileImg from '../assets/profile.webp';
 
 function Hero() {
   const [navAtBottom, setNavAtBottom] = useState(false);
@@ -67,7 +67,7 @@ function Hero() {
             <h1 className="text-3xl font-semibold text-gray-900 mb-2">
               JANARDHANA  REDDY
             </h1>
-            <p className="text-lg text-gray-600">Graduate Student (CS), New York University</p>
+            <p className="text-lg text-gray-600">Software Engineer | NYU '26 CS | Backend, Cloud & Agent Infrastructure</p>
           </div>
 
           {/* Profile Image - Mobile */}
@@ -78,7 +78,11 @@ function Hero() {
             >
               <img
                 src={profileImg}
-                alt="Janardhana Reddy"
+                alt="Janardhana Reddy headshot"
+                width="208"
+                height="260"
+                loading="eager"
+                fetchpriority="high"
                 className="w-full h-full object-cover object-top"
               />
             </div>
