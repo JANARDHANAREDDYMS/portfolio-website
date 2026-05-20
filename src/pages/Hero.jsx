@@ -44,7 +44,7 @@ function Hero() {
             { id: 'skills', href: '#skills', icon: <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg> },
             { id: 'contact', href: '#contact', icon: <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> },
           ].map((item) => (
-            <a
+              <a            
               key={item.id}
               href={item.href}
               onClick={(e) => {
@@ -60,96 +60,103 @@ function Hero() {
       </nav>
 
       <div className="max-w-7xl mx-auto w-full">
-        {/* Mobile: First screen with name, title, and picture */}
-        <div className="min-h-[calc(100vh-80px)] flex flex-col justify-center items-center lg:hidden pt-24">
-          {/* Name */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-semibold text-gray-900 mb-2">
-              JANARDHANA  REDDY
-            </h1>
-            <p className="text-lg text-gray-600">Software Engineer | NYU '26 CS | Backend, Cloud & Agent Infrastructure</p>
-          </div>
+            {/* Mobile: First screen with name, title, and picture */}
+            <div className="min-h-[calc(100vh-80px)] flex flex-col justify-center items-center lg:hidden">
+              {/* Name */}
+              <div className="text-center mb-8">
+                <h1 className="text-3xl font-semibold text-gray-900 mb-2">
+                  JANARDHANA REDDY
+                </h1>
+                <p className="text-lg text-gray-600">Software Engineer | NYU '26 CS | Backend, Cloud & Agent Infrastructure</p>
+              </div>
 
-          {/* Profile Image - Mobile */}
-          <div className="flex justify-center">
-            <div
-              className="w-[208px] h-[260px] border-[5px] overflow-hidden"
-              style={{ borderColor: '#1a2e44', borderRadius: '16px' }}
-            >
-              <img
-                src={profileImg}
-                alt="Janardhana Reddy headshot"
-                width="208"
-                height="260"
-                loading="eager"
-                fetchpriority="high"
-                className="w-full h-full object-cover object-top"
-              />
+              {/* Profile Image - Mobile */}
+              <div className="flex justify-center">
+                <div
+                  className="w-[208px] h-[260px] border-[5px] overflow-hidden"
+                  style={{ borderColor: '#1a2e44', borderRadius: '16px' }}
+                >
+                  <img
+                    src={profileImg}
+                    alt="Janardhana Reddy headshot"
+                    width="208"
+                    height="260"
+                    loading="eager"
+                    fetchpriority="high"
+                    className="w-full h-full object-cover object-top"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Mobile: About Me section (below the fold) */}
-        <div className="lg:hidden space-y-8 mt-8 pb-20">
-            {/* About Me */}
-            <div className="space-y-5">
-              <h2 className="text-xl font-semibold text-gray-900">About Me</h2>
+            {/* Mobile: About Me section (below the fold) */}
+            <div className="lg:hidden space-y-8 mt-8 pb-20">
+                {/* About Me */}
+                <div className="space-y-5">
+                  <h2 className="text-xl font-semibold text-gray-900">About Me</h2>
 
-              <p className="text-gray-700 leading-relaxed">
-                I am a Computer Science graduate student pursuing my Master's degree at{' '}
-                <span className="underline decoration-gray-400 underline-offset-2 cursor-pointer hover:decoration-gray-600">
-                  New York University
-                </span>
-                , with a strong passion for translating complex ideas into usable, real world products.
-              </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    I recently graduated with my Masters in Computer Science from{' '}
+                    <span className="underline decoration-gray-400 underline-offset-2 cursor-pointer hover:decoration-gray-600">
+                      New York University.
+                    </span>
+                  </p>
 
-              <p className="text-gray-700 leading-relaxed">
-                My primary interests lie in{' '}
-                <span
-                  className="text-white font-medium px-2 py-1"
-                  style={{
-                    background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=1f2937")',
-                    backgroundSize: '100% 100%',
-                    backgroundRepeat: 'no-repeat',
-                    margin: '-2px -6px',
-                    padding: '2px 10px',
-                  }}
-                >
-                  Agentic AI
-                </span>
-                ,{' '}
-                <span
-                  className="text-white font-medium px-2 py-1"
-                  style={{
-                    background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-2&color=1f2937")',
-                    backgroundSize: '100% 100%',
-                    backgroundRepeat: 'no-repeat',
-                    margin: '-2px -6px',
-                    padding: '2px 10px',
-                  }}
-                >
-                  Cloud Infrastructure
-                </span>
-                , and{' '}
-                <span
-                  className="text-white font-medium px-2 py-1"
-                  style={{
-                    background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-3&color=1f2937")',
-                    backgroundSize: '100% 100%',
-                    backgroundRepeat: 'no-repeat',
-                    margin: '-2px -6px',
-                    padding: '2px 10px',
-                  }}
-                >
-                  Backend Development
-                </span>
-                . I discovered my passion for building practical software products in high school and have continued to pursue it throughout my academic and professional journey. Diligence, ownership, and accountability are the three core principles I bring to every project I work on.
-              </p>
+                  <p className="text-gray-700 leading-relaxed">
+                   I have built production systems at the Intersection of AI agents and Distributed Systems as part of my Coursework, Hackathons etc, Most recently, I designed Project Cerebro, a real-time brain-computer interface processing 2048 Hz EEG data through Kafka → Flink → Spark pipelines with sub-500ms latency. I've also built AI-powered platforms for interviews and lead generation, scaling to 10,000+ concurrent users.
+                  </p>
 
-              <p className="text-gray-700 leading-relaxed">
-                Currently, most of my time is spent preparing for recruitment, keeping up with the latest research in artificial intelligence, and problem solving. Outside of technology, I enjoy following politics and sports, working out, and cooking.
-              </p>
-            </div>
+                  <p className="text-gray-700 leading-relaxed">
+                    As a TA for Cloud Computing at NYU, I taught graduate students distributed systems architecture and mentored teams building production grade cloud applications.
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed">
+                    My primary interests lie in{' '}
+                    <span
+                      className="text-white font-medium px-2 py-1"
+                      style={{
+                        background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=1f2937")',
+                        backgroundSize: '100% 100%',
+                        backgroundRepeat: 'no-repeat',
+                        margin: '-2px -6px',
+                        padding: '2px 10px',
+                      }}
+                    >
+                      Agentic AI
+                    </span>
+                    ,{' '}
+                    <span
+                      className="text-white font-medium px-2 py-1"
+                      style={{
+                        background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-2&color=1f2937")',
+                        backgroundSize: '100% 100%',
+                        backgroundRepeat: 'no-repeat',
+                        margin: '-2px -6px',
+                        padding: '2px 10px',
+                      }}
+                    >
+                      Cloud Infrastructure
+                    </span>
+                    , and{' '}
+                    <span
+                      className="text-white font-medium px-2 py-1"
+                      style={{
+                        background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-3&color=1f2937")',
+                        backgroundSize: '100% 100%',
+                        backgroundRepeat: 'no-repeat',
+                        margin: '-2px -6px',
+                        padding: '2px 10px',
+                      }}
+                    >
+                      Backend Development.
+                    </span>
+                    . Outside of coding, I spend my time automating daily tasks (like building a smart grocery list from fridge photos).
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed">
+                    Currently seeking new grad roles in backend engineering, agent infrastructure, and distributed systems.
+                  </p>
+                </div>
 
             {/* Social Icons */}
             <div className="flex items-center justify-center gap-2">
@@ -175,13 +182,13 @@ function Hero() {
         {/* Desktop Layout */}
         <div className="hidden lg:flex lg:flex-row lg:items-start lg:justify-between gap-12">
           {/* Left Content */}
-          <div className="lg:w-1/2 space-y-8">
+          <div className="lg:w-6/8 space-y-8">
             {/* Name */}
             <div>
               <h1 className="text-4xl font-semibold text-gray-900 mb-2">
-                JANARDHANA  REDDY
+                JANARDHANA REDDY
               </h1>
-              <p className="text-lg text-gray-600">Graduate Student (CS), New York University</p>
+              <p className="text-lg text-gray-600">Software Engineer | NYU '26 CS | Backend, Cloud & Agent Infrastructure</p>
             </div>
 
             {/* About Me */}
@@ -189,13 +196,19 @@ function Hero() {
               <h2 className="text-xl font-semibold text-gray-900">About Me</h2>
 
               <p className="text-gray-700 leading-relaxed">
-                I am a Computer Science graduate student pursuing my Master's degree at{' '}
-                <span className="underline decoration-gray-400 underline-offset-2 cursor-pointer hover:decoration-gray-600">
-                  New York University
-                </span>
-                , with a strong passion for translating complex ideas into usable, real world products.
-              </p>
+                    I recently graduated with my Masters in Computer Science from{' '}
+                    <span className="underline decoration-gray-400 underline-offset-2 cursor-pointer hover:decoration-gray-600">
+                      New York University.
+                    </span>
+                  </p>
 
+                  <p className="text-gray-700 leading-relaxed">
+                   I have built production systems at the Intersection of AI agents and Distributed Systems as part of my Coursework, Hackathons etc, Most recently, I designed Project Cerebro, a real-time brain-computer interface processing 2048 Hz EEG data through Kafka → Flink → Spark pipelines with sub-500ms latency. I've also built AI-powered platforms for interviews and lead generation, scaling to 10,000+ concurrent users.
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed">
+                    As a TA for Cloud Computing at NYU, I taught graduate students distributed systems architecture and mentored teams building production grade cloud applications.
+                  </p>
               <p className="text-gray-700 leading-relaxed">
                 My primary interests lie in{' '}
                 <span
@@ -234,13 +247,13 @@ function Hero() {
                     padding: '2px 10px',
                   }}
                 >
-                  Backend Development
+                  Backend Development.
                 </span>
-                . I discovered my passion for building practical software products in high school and have continued to pursue it throughout my academic and professional journey. Diligence, ownership, and accountability are the three core principles I bring to every project I work on.
-              </p>
+                    . Outside of coding, I spend my time automating daily tasks (like building a smart grocery list from fridge photos).
+                  </p>
 
               <p className="text-gray-700 leading-relaxed">
-                Currently, most of my time is spent preparing for recruitment, keeping up with the latest research in artificial intelligence, and problem solving. Outside of technology, I enjoy following politics and sports, working out, and cooking.
+                Currently seeking new grad roles in backend engineering, agent infrastructure, and distributed systems.
               </p>
             </div>
 
