@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { projects } from '../data/projects';
 
   const SvgIcon = ({ children, size = 14 }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -64,6 +66,14 @@ import { useEffect, useRef, useState } from 'react';
         <circle cx="17" cy="12" r="1"/>
       </SvgIcon>
     ),
+    'Lead AI': (
+      <SvgIcon size={28}>
+        <path d="M4 19V5"/>
+        <path d="M4 19h16"/>
+        <path d="M7 15l4-4 3 3 5-7"/>
+        <circle cx="17" cy="7" r="2"/>
+      </SvgIcon>
+    ),
     'Code Sensei': (
       <SvgIcon size={28}>
         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
@@ -91,303 +101,113 @@ import { useEffect, useRef, useState } from 'react';
     ),
   };
 
-  const projects = [
-  {
-    id: 4,
-    title: 'ProjectCerebro',
-    date: 'May 2026',
-    repo: 'https://github.com/JANARDHANAREDDYMS/projectcerebro',
-    description: `Built a cross-hardware EEG motor imagery BCI platform that converts raw EEG into Delta Lake epochs, trains few-shot adapted PyTorch models, and serves real-time predictions through FastAPI and LangGraph agents.`,
-    bullets: [
-      `Built an end-to-end EEG data pipeline using MNE, Spark, Delta Lake, MongoDB, and Cassandra to process PhysioNet, BCI IV-2a, and private EEG recordings into 5-channel motor imagery epochs.`,
-      
-      `Implemented EEGNet, ShallowConvNet, Euclidean Alignment, z-score normalization, class weighting, LOSO evaluation, and few-shot subject adaptation, reaching roughly 74% mean accuracy and macro-F1 with 50-shot personalized ensemble adaptation.`,
-      
-      `Deployed a real-time inference layer with FastAPI, pgvector embedding retrieval, MongoDB session logging, and LangGraph agents for signal quality, prediction, monitoring, data curation, HPO advice, and report generation.`,
-    ],
-    tech: ['PyTorch', 'Spark', 'Delta Lake', 'FastAPI', 'LangGraph', 'Kafka', 'MLflow', 'pgvector'],
-    color: '#5B5F97',
-  },
+  function ProjectCard({ project }) {
+    return (
+      <article
+        className="min-h-[520px] w-full p-5 shadow-2xl transition-colors duration-300 md:p-8 lg:min-h-[500px]"
+        style={{ backgroundColor: project.color, borderRadius: '24px' }}
+      >
+        <div className="flex h-full flex-col justify-between text-white">
+          <div>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-11 w-15 flex-shrink-0 items-center justify-center bg-white" style={{ color: project.color, borderRadius: '14px' }}>
+                  {projectIcons[project.title]}
+                </div>
+                <h3 className="text-3xl font-bold leading-tight">{project.title}</h3>
+              </div>
+              <span className="text-sm font-medium text-white/80">{project.date}</span>
+            </div>
 
-  {
-    id: 1,
-    title: 'Code Sensei',
-    date: 'May 2025',
-    repo: 'https://github.com/JANARDHANAREDDYMS/CodeSensei',
-    description: `Built an agentic AI-powered interview platform that generates personalized technical assessments by reasoning over user prompts and historical performance, using multi-agent LLM workflows with explicit role separation, contextual memory, and constrained generation.`,
-    bullets: [
-      `Designed end-to-end CI/CD pipelines using AWS CodePipeline and CodeBuild to automatically test, build Docker images, and deploy Django microservices to EKS.`,
-      
-      `Created a context-aware hinting and code execution system using ECS Fargate, combining tool-calling LLM agents with isolated execution environments to support 10,000+ concurrent users.`,
-    ],
-    tech: ['MCP', 'DynamoDB', 'OpenSearch', 'EKS', 'ECS'],
-    color: '#E63946',
-  },
+            <p className="mt-3 max-w-4xl text-sm leading-6 text-white/90 md:text-base">
+  {project.description}
+</p>
 
-  {
-    id: 2,
-    title: 'NYU Enrolls',
-    date: 'Dec 2025',
-    repo: 'https://github.com/JANARDHANAREDDYMS/nyuenrolls',
-    description: `Developed and optimized a course enrollment system using Django and PostgreSQL, incorporating natural language search, resulting in 30% faster enrollment processing.`,
-    bullets: [
-      `Integrated data analytics pipelines using Pandas and scikit-learn on pre-registration data, enabling administrators to adjust 100+ courses per semester.`,
-      
-      `Improved system scalability through Docker-based containerization and orchestration with AWS EKS, supporting 10,000+ concurrent users.`,
-      
-      `Resolved correctness issues in the waitlisting system using a priority queue-based approach and collaborated with NYU IT to integrate the solution.`,
-    ],
-    tech: ['Django', 'PostgreSQL', 'AWS EKS', 'Docker', 'GCP', 'Pandas', 'scikit-learn'],
-    color: '#457B9D',
-  },
+            {project.bullets?.length > 0 && (
+              <ul className="mt-5 grid gap-3 text-sm leading-6 text-white/85 lg:grid-cols-1">
+                {project.bullets.map((bullet) => (
+                  <li key={bullet} className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white/80" />
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-  {
-    id: 3,
-    title: 'Crowd Monitoring System',
-    date: 'May 2024',
-    repo: 'https://github.com/JANARDHANAREDDYMS/yoloposemodel',
-    description: `Developed a deep learning system for crowd monitoring at college events by fine-tuning YOLOPosev8 on biased datasets, achieving 90% mAP@0.5 for human detection.`,
-    bullets: [
-      `Designed an automated homography pipeline, improving inter-person distance accuracy by 30% via 3D-to-2D scene mapping.`,
-      
-      `Enhanced crowd monitoring by integrating real-time alerts and generating density maps to monitor violations per event.`,
-    ],
-    tech: ['PyTorch', 'OpenCV', 'YOLOPose', 'Homography', 'DeepSORT'],
-    color: '#2A9D8F',
-  },
-];
+          <div className="mt-7">
+            <div className="flex flex-wrap gap-6">
+              {project.tech.map((tech) => (
+                <span
+                  className="flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+                >
+                  {techIcons[tech]}
+                  {tech}
+                </span>
+              ))}
+            </div>
 
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <Link to={`/projects/${project.slug}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-white/80 transition-colors">
+                View details
+                <SvgIcon><polyline points="9 18 15 12 9 6" /></SvgIcon>
+              </Link>
+              {project.repo !== '#' && (
+                <a href={project.repo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-white/75 hover:text-white transition-colors">
+                  <SvgIcon><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></SvgIcon>
+                  View on GitHub
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </article>
+    );
+  }
 
   function Projects() {
-    const containerRef = useRef(null);
-    const cardsRef = useRef([]);
-    const [expandedCard, setExpandedCard] = useState(null);
-    const [isMobile, setIsMobile] = useState(false);
-
-    const toggleExpand = (id) => {
-      setExpandedCard(expandedCard === id ? null : id);
-    };
-
-    useEffect(() => {
-      const checkMobile = () => {
-        setIsMobile(window.innerWidth < 1024);
-      };
-
-      const handleScroll = () => {
-        if (!containerRef.current) return;
-
-        const container = containerRef.current;
-        const containerRect = container.getBoundingClientRect();
-        const containerTop = containerRect.top;
-        const windowHeight = window.innerHeight;
-        const currentIsMobile = window.innerWidth < 768;
-
-        const scrollStart = -windowHeight * 0.2;
-        const scrollEnd = -container.offsetHeight + windowHeight;
-        const scrollProgress = Math.max(0, Math.min(1, (scrollStart - containerTop) / (scrollStart -
-  scrollEnd)));
-
-        cardsRef.current.forEach((card, index) => {
-          if (!card) return;
-
-          const offsetPerCard = currentIsMobile ? 20 : 30;
-          const stackOffset = index * offsetPerCard;
-
-          if (index === 0) {
-            card.style.transform = currentIsMobile ? `translateY(${stackOffset}px)` :
-  `translateX(${stackOffset}px)`;
-            card.style.opacity = 1;
-            return;
-          }
-
-          const cardProgress = Math.max(0, Math.min(1, (scrollProgress * (projects.length - 1) - (index -
-  1))));
-
-          if (cardProgress > 0.1 && expandedCard === projects[index - 1]?.id) {
-            setExpandedCard(null);
-          }
-
-          if (currentIsMobile) {
-            const startY = windowHeight * 0.8;
-            const endY = stackOffset;
-            const currentY = startY - (startY - endY) * cardProgress;
-            card.style.transform = `translateY(${currentY}px)`;
-          } else {
-            const startX = window.innerWidth * 0.8;
-            const endX = stackOffset;
-            const currentX = startX - (startX - endX) * cardProgress;
-            card.style.transform = `translateX(${currentX}px)`;
-          }
-
-          card.style.opacity = cardProgress > 0 ? 1 : 0;
-        });
-      };
-
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-      window.addEventListener('scroll', handleScroll);
-      handleScroll();
-
-      return () => {
-        window.removeEventListener('resize', checkMobile);
-        window.removeEventListener('scroll', handleScroll);
-      };
-    }, [expandedCard]);
-
-    if (isMobile) {
-      return (
-        <section id="projects" className="px-4 pt-6 pb-6" style={{ backgroundColor: '#F3EDE5' }}>
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Projects</h2>
-          <div className="space-y-10">
-            {projects.map((project) => {
-              const isExpanded = expandedCard === project.id;
-              return (
-                <div key={project.id} className="rounded-3xl p-4 pb-8 shadow-xl relative"
-  style={{ backgroundColor: project.color }}>
-                  <div className="flex flex-col text-white">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center
-  flex-shrink-0" style={{ color: project.color }}>
-                            {projectIcons[project.title]}
-                          </div>
-                          <h3 className="text-xl font-bold">{project.title}</h3>
-                        </div>
-                        <span className="text-xs font-medium opacity-80">{project.date}</span>
-                      </div>
-                      <p className="text-sm opacity-90 leading-relaxed">{project.description}</p>
-                      {isExpanded && project.bullets && (
-                        <ul className="mt-3 space-y-2 text-sm opacity-85">
-                          {project.bullets.map((bullet, i) => (
-                            <li key={i} className="flex gap-2">
-                              <span>•</span>
-                              <span>{bullet}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {project.tech.map((tech) => (
-                        <span key={tech} className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs
-  font-medium" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                          {techIcons[tech]}
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-
-                    <a href={project.repo} target="_blank" rel="noopener noreferrer" className="inline-flex
-  items-center gap-1.5 mt-3 text-xs font-medium text-white/80 hover:text-white transition-colors"
-  onClick={(e) => e.stopPropagation()}>
-                      <SvgIcon size={13}><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-
-  2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38
-  13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44
-  7A3.37 3.37 0 0 0 9 18.13V22"/></SvgIcon>
-                      View on GitHub
-                    </a>
-                  </div>
-
-                  <button onClick={() => toggleExpand(project.id)} className="absolute bottom-0 left-1/2 z-20 -translate-x-1/2 translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-  fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-  className={`text-gray-700 transition-transform duration-300 ${isExpanded ? '-rotate-90' : 'rotate-90'}`}>
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      );
-    }
+    const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id);
+    const selectedProject = projects.find((project) => project.id === selectedProjectId) ?? projects[0];
 
     return (
-      <section id="projects" ref={containerRef} className="relative px-6 md:px-16 lg:px-24"
-  style={{ backgroundColor: '#F3EDE5', height: `${projects.length * 100 + 100}vh` }}>
-        <div className="sticky top-0 h-screen pt-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">Projects</h2>
+      <section id="projects" className="px-4 py-12 md:px-16 lg:px-24 lg:py-20" style={{ backgroundColor: '#F3EDE5' }}>
+        <div className="mx-auto max-w-7xl">
+          <h2 className="mb-8 text-4xl font-bold text-gray-900 md:text-5xl">Projects</h2>
 
-          <div className="relative">
-            {projects.map((project, index) => {
-              const isLastCard = index === projects.length - 1;
-              const isExpanded = isLastCard || expandedCard === project.id;
-              return (
-                <div
-                  key={project.id}
-                  ref={(el) => (cardsRef.current[index] = el)}
-                  className="absolute top-0 left-0 rounded-3xl p-8 shadow-2xl transition-all duration-500
-  ease-out h-[540px]"
-                  style={{
-                    backgroundColor: project.color,
-                    zIndex: index + 1,
-                    opacity: index === 0 ? 1 : 0,
-                    transform: index === 0 ? 'translateX(0px)' : 'translateX(100vw)',
-                    width: isExpanded ? '900px' : '500px',
-                  }}
-                >
-                  <div className="h-full flex flex-col justify-between text-white overflow-hidden">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center
-  flex-shrink-0" style={{ color: project.color }}>
-                            {projectIcons[project.title]}
-                          </div>
-                          <h3 className="text-3xl font-bold">{project.title}</h3>
-                        </div>
-                        <span className="text-sm font-medium opacity-80">{project.date}</span>
-                      </div>
-                      <p className="text-base opacity-90 leading-relaxed">{project.description}</p>
-                      {isExpanded && project.bullets && (
-                        <ul className="mt-3 space-y-2 text-sm opacity-85">
-                          {project.bullets.map((bullet, i) => (
-                            <li key={i} className="flex gap-2">
-                              <span>•</span>
-                              <span>{bullet}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
+            <div className="flex gap-3 overflow-x-auto pb-2 lg:w-[15%] lg:min-w-[170px] lg:flex-col lg:justify-center lg:overflow-visible lg:pb-0">
+              {projects.map((project) => {
+                const isSelected = selectedProject.id === project.id;
 
-                    <div>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tech.map((tech) => (
-                          <span key={tech} className="flex items-center gap-1.5 px-3 py-1 rounded-full text-
-  sm font-medium" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                            {techIcons[tech]}
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      <a href={project.repo} target="_blank" rel="noopener noreferrer" className="inline-
-  flex items-center gap-1.5 mt-3 text-sm font-medium text-white/70 hover:text-white transition-colors"
-  onClick={(e) => e.stopPropagation()}>
-                        <SvgIcon><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-
-  2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38
-  13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44
-  7A3.37 3.37 0 0 0 9 18.13V22"/></SvgIcon>
-                        View on GitHub
-                      </a>
-                    </div>
-                  </div>
+                return (
+                  <button
+                    key={project.id}
+                    type="button"
+                    onClick={() => setSelectedProjectId(project.id)}
+                    className={`flex min-w-[190px] items-center gap-3 border px-3 py-3 text-left transition-all duration-200 lg:min-w-0 ${
+                      isSelected
+                        ? 'border-gray-950 bg-gray-950 text-white shadow-lg'
+                        : 'border-gray-300 bg-white/55 text-gray-800 hover:border-gray-500 hover:bg-white'
+                    }`}
+                    style={{ borderRadius: '8px' }}
+                    aria-pressed={isSelected}
+                  >
+                    <span
+                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-white"
+                      style={{ color: project.color, borderRadius: '8px' }}
+                    >
+                      {projectIcons[project.title]}
+                    </span>
+                    <span className="min-w-0 text-sm font-semibold leading-5">{project.title}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-                  {!isLastCard && (
-                    <button onClick={() => toggleExpand(project.id)} className="absolute right-0 top-1/2 z-20 translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-all duration-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-  fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-  className={`text-gray-700 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
-                    </button>
-                  )}
-                </div>
-              );
-            })}
+            <div className="min-w-0 flex-1">
+              <ProjectCard project={selectedProject} />
+            </div>
           </div>
         </div>
       </section>

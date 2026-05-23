@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadOS · Agent Pipeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f5f6fa;
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+
+  .header { text-align: center; margin-bottom: 28px; }
+  .wordmark {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: #9aa0bb; margin-bottom: 5px;
+  }
+  .wordmark em { color: #7c3aed; font-style: normal; }
+  .title { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; color: #1a1e2e; }
+  .subtitle { font-size: 11.5px; color: #9aa0bb; font-family: 'IBM Plex Mono', monospace; margin-top: 3px; }
+
+  .diagram-wrap {
+    width: 100%;
+    max-width: 1100px;
+    background: #fff;
+    border: 1px solid #e2e5f0;
+    border-radius: 16px;
+    padding: 32px 24px 28px;
+    box-shadow: 0 2px 24px rgba(100,110,180,0.07);
+  }
+
+  svg.pipeline { width: 100%; height: auto; overflow: visible; }
+
+  /* node fills/strokes via CSS */
+  .n-gray    { fill: #f1f3f9; stroke: #cbd0e0; }
+  .n-purple  { fill: #ede9fe; stroke: #c4b5fd; }
+  .n-teal    { fill: #ccfbf1; stroke: #5eead4; }
+  .n-coral   { fill: #ffe4e6; stroke: #fda4af; }
+  .n-diamond { fill: #f1f3f9; stroke: #cbd0e0; }
+
+  .node-rect { stroke-width: 1.5; rx: 9; cursor: default; transition: filter 0.2s; }
+  .node-rect:hover { filter: drop-shadow(0 3px 10px rgba(100,110,180,0.18)); }
+
+  .lbl-h { font-family: 'IBM Plex Sans', sans-serif; font-size: 12.5px; font-weight: 600; }
+  .lbl-s { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; fill: #9aa0bb; }
+
+  .lbl-h.c-purple { fill: #7c3aed; }
+  .lbl-h.c-teal   { fill: #0d9488; }
+  .lbl-h.c-coral  { fill: #e11d48; }
+  .lbl-h.c-gray   { fill: #5a6282; }
+
+  .edge { fill: none; stroke: #d4d8e8; stroke-width: 1.5; }
+  .edge-teal { stroke: #5eead4; }
+  .edge-coral { stroke: #fda4af; }
+
+  .route-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; fill: #9aa0bb; }
+
+  /* animated dot along path */
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .group-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; fill: #b0b8d0;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  .status-bar {
+    margin-top: 20px;
+    display: flex; gap: 18px; align-items: center;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .status-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11.5px; color: #5a6282;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-p { background: #7c3aed; animation: blink 1.6s ease-in-out infinite; }
+  .dot-t { background: #0d9488; }
+  .dot-c { background: #e11d48; }
+  .dot-g { background: #9aa0bb; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* tooltip */
+  .tooltip {
+    position: fixed; pointer-events: none; z-index: 99;
+    background: #fff; border: 1.5px solid #e2e5f0;
+    border-radius: 9px; padding: 10px 14px;
+    font-size: 12px; color: #1a1e2e; max-width: 230px; line-height: 1.55;
+    box-shadow: 0 6px 24px rgba(100,110,180,0.13);
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .tooltip.show { opacity: 1; }
+  .tt-title { font-weight: 600; font-size: 10px; letter-spacing: 0.09em;
+    text-transform: uppercase; color: #9aa0bb; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="wordmark"><em>Lead</em>OS</div>
+  <div class="title">Agent Pipeline</div>
+  <div class="subtitle">// orchestrator → enrichment → scoring → outreach</div>
+</div>
+
+<div class="diagram-wrap">
+<!--
+  ViewBox: 0 0 1060 420
+  Orchestrator cx=75, cy=210
+  Agents cx=270: Identity cy=70, Company cy=150, Market cy=210, Property cy=270, Values cy=350
+  Collector cx=460, cy=210
+  Diamond center 590,210
+  Scoring cx=730, cy=210
+  Outreach cx=880, cy=210
+  End cx=1010, cy=210
+  Disqualified cx=590, cy=350
+-->
+<svg class="pipeline" viewBox="0 0 1060 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5"
+      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1.5 L8 5 L2 8.5" fill="none" stroke="#c0c7de" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-t" viewBox="0 0 10 10" refX="8" refY="5"
+      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1.5 L8 5 L2 8.5" fill="none" stroke="#5eead4" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-c" viewBox="0 0 10 10" refX="8" refY="5"
+      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1.5 L8 5 L2 8.5" fill="none" stroke="#fda4af" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- ── GROUP LABELS ── -->
+  <text class="group-lbl" x="193" y="22">⬡ parallel fan-out</text>
+  <rect x="183" y="28" width="175" height="364" rx="8"
+    fill="none" stroke="#e8eaf4" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <text class="group-lbl" x="694" y="185">→ sequential</text>
+  <rect x="684" y="190" width="310" height="60" rx="8"
+    fill="none" stroke="#c9f7f2" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- ══════════════════════════════════════════
+       EDGES (drawn before nodes so nodes sit on top)
+  ══════════════════════════════════════════ -->
+
+  <!-- Orchestrator → each agent (bezier fan-out) -->
+  <!-- to Identity cy=70 -->
+  <path id="e-o-id" class="edge"
+    d="M130,210 C165,210 155,70 183,70" marker-end="url(#arr)"/>
+  <!-- to Company cy=150 -->
+  <path id="e-o-co" class="edge"
+    d="M130,210 C165,210 155,150 183,150" marker-end="url(#arr)"/>
+  <!-- to Market cy=210 -->
+  <path id="e-o-mk" class="edge"
+    d="M130,210 L183,210" marker-end="url(#arr)"/>
+  <!-- to Property cy=270 -->
+  <path id="e-o-pr" class="edge"
+    d="M130,210 C165,210 155,270 183,270" marker-end="url(#arr)"/>
+  <!-- to Values cy=350 -->
+  <path id="e-o-va" class="edge"
+    d="M130,210 C165,210 155,350 183,350" marker-end="url(#arr)"/>
+
+  <!-- each agent → Collector (bezier fan-in) -->
+  <!-- Identity cy=70 → Collector left=418 -->
+  <path id="e-id-c" class="edge"
+    d="M358,70 C390,70 400,210 418,210" marker-end="url(#arr)"/>
+  <!-- Company cy=150 -->
+  <path id="e-co-c" class="edge"
+    d="M358,150 C390,150 400,210 418,210" marker-end="url(#arr)"/>
+  <!-- Market cy=210 -->
+  <path id="e-mk-c" class="edge"
+    d="M358,210 L418,210" marker-end="url(#arr)"/>
+  <!-- Property cy=270 -->
+  <path id="e-pr-c" class="edge"
+    d="M358,270 C390,270 400,210 418,210" marker-end="url(#arr)"/>
+  <!-- Values cy=350 -->
+  <path id="e-va-c" class="edge"
+    d="M358,350 C390,350 400,210 418,210" marker-end="url(#arr)"/>
+
+  <!-- Collector → Diamond -->
+  <path id="e-c-d" class="edge"
+    d="M502,210 L558,210" marker-end="url(#arr)"/>
+
+  <!-- Diamond → Scoring (yes, right) -->
+  <path id="e-d-sc" class="edge edge-teal"
+    d="M622,210 L684,210" marker-end="url(#arr-t)"/>
+  <text class="route-lbl" x="628" y="204">yes</text>
+
+  <!-- Diamond → Disqualified (no, down) -->
+  <path id="e-d-dq" class="edge edge-coral"
+    d="M590,242 L590,318" marker-end="url(#arr-c)"/>
+  <text class="route-lbl" x="596" y="288">no</text>
+
+  <!-- Scoring → Outreach -->
+  <path id="e-sc-ou" class="edge edge-teal"
+    d="M776,210 L834,210" marker-end="url(#arr-t)"/>
+
+  <!-- Outreach → End -->
+  <path id="e-ou-en" class="edge edge-teal"
+    d="M926,210 L964,210" marker-end="url(#arr-t)"/>
+
+  <!-- ── ANIMATED DOTS ── -->
+  <!-- fan-out dots (purple) -->
+  <g>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0s" repeatCount="indefinite">
+        <mpath href="#e-o-id"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.22s" repeatCount="indefinite">
+        <mpath href="#e-o-co"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.44s" repeatCount="indefinite">
+        <mpath href="#e-o-mk"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.66s" repeatCount="indefinite">
+        <mpath href="#e-o-pr"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.88s" repeatCount="indefinite">
+        <mpath href="#e-o-va"/>
+      </animateMotion>
+    </circle>
+  </g>
+  <!-- fan-in dots (purple) -->
+  <g>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.1s" repeatCount="indefinite">
+        <mpath href="#e-id-c"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.32s" repeatCount="indefinite">
+        <mpath href="#e-co-c"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.54s" repeatCount="indefinite">
+        <mpath href="#e-mk-c"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.76s" repeatCount="indefinite">
+        <mpath href="#e-pr-c"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#a78bfa" opacity="0.9">
+      <animateMotion dur="1.4s" begin="0.98s" repeatCount="indefinite">
+        <mpath href="#e-va-c"/>
+      </animateMotion>
+    </circle>
+  </g>
+  <!-- sequential teal dots -->
+  <g>
+    <circle r="3.5" fill="#2dd4bf" opacity="0.9">
+      <animateMotion dur="1.2s" begin="0s" repeatCount="indefinite">
+        <mpath href="#e-c-d"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#2dd4bf" opacity="0.9">
+      <animateMotion dur="1.0s" begin="0s" repeatCount="indefinite">
+        <mpath href="#e-d-sc"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#2dd4bf" opacity="0.9">
+      <animateMotion dur="1.0s" begin="0.3s" repeatCount="indefinite">
+        <mpath href="#e-sc-ou"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" fill="#2dd4bf" opacity="0.9">
+      <animateMotion dur="1.0s" begin="0.6s" repeatCount="indefinite">
+        <mpath href="#e-ou-en"/>
+      </animateMotion>
+    </circle>
+  </g>
+  <!-- coral dot to disqualified -->
+  <circle r="3.5" fill="#fb7185" opacity="0.9">
+    <animateMotion dur="1.4s" begin="0.5s" repeatCount="indefinite">
+      <mpath href="#e-d-dq"/>
+    </animateMotion>
+  </circle>
+
+  <!-- ══════════════════════════════════════════
+       NODES
+  ══════════════════════════════════════════ -->
+
+  <!-- ORCHESTRATOR -->
+  <g data-tip="orchestrator">
+    <rect class="node-rect n-gray" x="20" y="186" width="110" height="48"/>
+    <text class="lbl-h c-gray" x="75" y="207" text-anchor="middle" dominant-baseline="central">Orchestrator</text>
+    <text class="lbl-s" x="75" y="222" text-anchor="middle" dominant-baseline="central">lead submitted</text>
+  </g>
+
+  <!-- IDENTITY -->
+  <g data-tip="identity">
+    <rect class="node-rect n-purple" x="183" y="48" width="175" height="44"/>
+    <text class="lbl-h c-purple" x="270" y="66" text-anchor="middle" dominant-baseline="central">Identity</text>
+    <text class="lbl-s" x="270" y="81" text-anchor="middle" dominant-baseline="central">LinkedIn · email</text>
+  </g>
+
+  <!-- COMPANY -->
+  <g data-tip="company">
+    <rect class="node-rect n-purple" x="183" y="128" width="175" height="44"/>
+    <text class="lbl-h c-purple" x="270" y="146" text-anchor="middle" dominant-baseline="central">Company</text>
+    <text class="lbl-s" x="270" y="161" text-anchor="middle" dominant-baseline="central">SEC · Exa · jobs</text>
+  </g>
+
+  <!-- MARKET -->
+  <g data-tip="market">
+    <rect class="node-rect n-purple" x="183" y="188" width="175" height="44"/>
+    <text class="lbl-h c-purple" x="270" y="206" text-anchor="middle" dominant-baseline="central">Market</text>
+    <text class="lbl-s" x="270" y="221" text-anchor="middle" dominant-baseline="central">Census · FRED · HUD</text>
+  </g>
+
+  <!-- PROPERTY -->
+  <g data-tip="property">
+    <rect class="node-rect n-purple" x="183" y="248" width="175" height="44"/>
+    <text class="lbl-h c-purple" x="270" y="266" text-anchor="middle" dominant-baseline="central">Property</text>
+    <text class="lbl-s" x="270" y="281" text-anchor="middle" dominant-baseline="central">WalkScore · v2</text>
+  </g>
+
+  <!-- VALUES -->
+  <g data-tip="values">
+    <rect class="node-rect n-purple" x="183" y="328" width="175" height="44"/>
+    <text class="lbl-h c-purple" x="270" y="346" text-anchor="middle" dominant-baseline="central">Values</text>
+    <text class="lbl-s" x="270" y="361" text-anchor="middle" dominant-baseline="central">ESG · tech · v2</text>
+  </g>
+
+  <!-- COLLECTOR -->
+  <g data-tip="collector">
+    <rect class="node-rect n-gray" x="418" y="186" width="110" height="48"/>
+    <text class="lbl-h c-gray" x="473" y="207" text-anchor="middle" dominant-baseline="central">Collector</text>
+    <text class="lbl-s" x="473" y="222" text-anchor="middle" dominant-baseline="central">gate · fan-in</text>
+  </g>
+
+  <!-- DIAMOND -->
+  <g data-tip="routing">
+    <polygon points="590,180 622,210 590,240 558,210"
+      class="n-diamond" stroke-width="1.5" style="cursor:default"/>
+    <text class="lbl-s" x="590" y="206" text-anchor="middle" dominant-baseline="central">residential?</text>
+    <text class="lbl-s" x="590" y="218" text-anchor="middle" dominant-baseline="central">score ≥ 20?</text>
+  </g>
+
+  <!-- SCORING -->
+  <g data-tip="scoring">
+    <rect class="node-rect n-teal" x="684" y="186" width="92" height="48"/>
+    <text class="lbl-h c-teal" x="730" y="207" text-anchor="middle" dominant-baseline="central">Scoring</text>
+    <text class="lbl-s" x="730" y="222" text-anchor="middle" dominant-baseline="central">0–100 · 5 signals</text>
+  </g>
+
+  <!-- OUTREACH -->
+  <g data-tip="outreach">
+    <rect class="node-rect n-teal" x="834" y="186" width="92" height="48"/>
+    <text class="lbl-h c-teal" x="880" y="207" text-anchor="middle" dominant-baseline="central">Outreach</text>
+    <text class="lbl-s" x="880" y="222" text-anchor="middle" dominant-baseline="central">signal → email</text>
+  </g>
+
+  <!-- END -->
+  <g data-tip="end">
+    <rect class="node-rect n-gray" x="964" y="186" width="80" height="48"/>
+    <text class="lbl-h c-gray" x="1004" y="207" text-anchor="middle" dominant-baseline="central">End</text>
+    <text class="lbl-s" x="1004" y="222" text-anchor="middle" dominant-baseline="central">qualified</text>
+  </g>
+
+  <!-- DISQUALIFIED -->
+  <g data-tip="disqualified">
+    <rect class="node-rect n-coral" x="525" y="318" width="130" height="48"/>
+    <text class="lbl-h c-coral" x="590" y="339" text-anchor="middle" dominant-baseline="central">Disqualified</text>
+    <text class="lbl-s" x="590" y="354" text-anchor="middle" dominant-baseline="central">not residential</text>
+  </g>
+
+  <!-- pulse rings on active nodes -->
+  <g id="pulse-rings">
+    <!-- purple rings on agents -->
+    <rect x="183" y="48" width="175" height="44" rx="9" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0">
+      <animate attributeName="opacity" values="0.5;0" dur="1.6s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="width" values="175;195" dur="1.6s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="height" values="44;64" dur="1.6s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="x" values="183;173" dur="1.6s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="48;38" dur="1.6s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-item"><div class="dot dot-p"></div>Enrichment agents (parallel)</div>
+  <div class="status-item"><div class="dot dot-t"></div>Scoring + outreach (sequential)</div>
+  <div class="status-item"><div class="dot dot-c"></div>Disqualification exit</div>
+  <div class="status-item"><div class="dot dot-g"></div>Control nodes</div>
+</div>
+
+<div class="tooltip" id="tip"></div>
+
+<script>
+  const tips = {
+    orchestrator: { title: 'Orchestrator', body: 'Entry point. Receives an incoming lead and dispatches all five enrichment agents simultaneously.' },
+    identity:     { title: 'Identity Agent', body: 'Resolves LinkedIn profile, email address, and personal background signals.' },
+    company:      { title: 'Company Agent',  body: 'Fetches SEC filings, Exa search results, and active job postings to profile the employer.' },
+    market:       { title: 'Market Agent',   body: 'Pulls Census, FRED economic, and HUD housing data for local market conditions.' },
+    property:     { title: 'Property Agent', body: 'Scores walkability via WalkScore and runs v2 valuation models on associated properties.' },
+    values:       { title: 'Values Agent',   body: 'Surfaces ESG commitments, tech stack signals, and lifestyle indicators for personalization.' },
+    collector:    { title: 'Collector Gate', body: 'Fan-in node. Waits for all five agents to complete before routing downstream.' },
+    routing:      { title: 'Routing Decision', body: 'Routes to Scoring only if the lead is residential AND raw score ≥ 20. Otherwise, disqualified.' },
+    disqualified: { title: 'Disqualified',   body: 'Lead exits the pipeline. Not residential, or score below threshold.' },
+    scoring:      { title: 'Scoring Agent',  body: 'Aggregates five enrichment signals into a 0–100 composite score.' },
+    outreach:     { title: 'Outreach Agent', body: 'Synthesizes scored signals into a personalized outreach email.' },
+    end:          { title: 'End',            body: 'Qualified lead exits with score, enriched profile, and draft email ready.' },
+  };
+
+  const tooltip = document.getElementById('tip');
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.style.cursor = 'default';
+    el.addEventListener('mouseenter', e => {
+      const t = tips[el.dataset.tip]; if (!t) return;
+      tooltip.innerHTML = `<div class="tt-title">${t.title}</div>${t.body}`;
+      tooltip.classList.add('show');
+      move(e);
+    });
+    el.addEventListener('mousemove', move);
+    el.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+  });
+  function move(e) {
+    tooltip.style.left = Math.min(e.clientX + 14, window.innerWidth - 250) + 'px';
+    tooltip.style.top  = Math.min(e.clientY - 8, window.innerHeight - 110) + 'px';
+  }
+</script>
+</body>
+</html>

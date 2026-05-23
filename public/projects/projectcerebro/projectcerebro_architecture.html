@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProjectCerebro — EEG BCI Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f0e8; font-family: 'Inter', sans-serif; padding: 32px 20px 60px; }
+  h1 { text-align: center; font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; letter-spacing: -0.3px; }
+  .sub { text-align: center; font-size: 12px; color: #6b6b7e; margin-bottom: 24px; letter-spacing: 0.5px; }
+  .wrap { width: 100%; overflow-x: auto; background: #faf7f0; border: 1px solid #e0d8c8; border-radius: 16px; padding: 28px 24px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+  svg { display: block; min-width: 1160px; }
+  .nd rect { transition: filter 0.15s; cursor: default; }
+  .nd:hover rect { filter: brightness(0.9); }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px 22px; justify-content: center; margin-top: 20px; font-size: 11px; color: #5a5a6e; }
+  .li { display: flex; align-items: center; gap: 6px; }
+  .ld { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<h1>ProjectCerebro — Dual-Path EEG BCI Architecture</h1>
+<p class="sub">Real-Time Brain-Computer Interface · NYU Tandon School of Engineering · NeurIPS 2026</p>
+<div class="wrap">
+<svg width="100%" viewBox="0 0 2060 1080" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- PATH BADGES -->
+<rect x="120" y="6" width="460" height="24" rx="7" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+<text x="350" y="22" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#1d4ed8">BATCH TRAINING PATH (Week 1–2)</text>
+<rect x="1260" y="6" width="460" height="24" rx="7" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+<text x="1490" y="22" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#15803d">REAL-TIME INFERENCE PATH (Week 3)</text>
+
+<!-- ── LANE 1: DATA SOURCES ── -->
+<rect x="10" y="40" width="2040" height="108" rx="8" fill="#dbeafe" fill-opacity="0.3" stroke="#93c5fd" stroke-width="1"/>
+<text x="20" y="62" font-family="Inter" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="1.5">DATA SOURCES</text>
+<g class="nd"><rect x="120" y="52" width="210" height="84" rx="8" fill="#1565c0" stroke="#0d47a1" stroke-width="1.5"/>
+<text x="225" y="72" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">PhysioNet EEGMMIDB</text>
+<text x="225" y="88" text-anchor="middle" font-family="Inter" font-size="10" fill="#e3f2fd">109 subjects · 64ch · 160Hz · .edf</text>
+<text x="225" y="104" text-anchor="middle" font-family="Inter" font-size="10" fill="#bbdefb">3.4 GB · DONE ✓</text>
+<text x="225" y="120" text-anchor="middle" font-family="Inter" font-size="9" fill="#90caf9">BCI2000 amplifier</text></g>
+<g class="nd"><rect x="360" y="52" width="210" height="84" rx="8" fill="#1565c0" stroke="#0d47a1" stroke-width="1.5"/>
+<text x="465" y="72" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">BCI Competition IV-2a</text>
+<text x="465" y="88" text-anchor="middle" font-family="Inter" font-size="10" fill="#e3f2fd">9 subjects · 22ch · 250Hz · .gdf</text>
+<text x="465" y="104" text-anchor="middle" font-family="Inter" font-size="10" fill="#bbdefb">420 MB · DONE ✓</text>
+<text x="465" y="120" text-anchor="middle" font-family="Inter" font-size="9" fill="#90caf9">g.tec · cross-hardware target</text></g>
+<g class="nd"><rect x="1260" y="52" width="230" height="84" rx="8" fill="#e65100" stroke="#bf360c" stroke-width="1.5"/>
+<text x="1375" y="72" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Private Dataset</text>
+<text x="1375" y="88" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffccbc">26 trials · 1 subject · 20ch · 2048Hz</text>
+<text x="1375" y="104" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffe0b2">Held-out test set · Week 3</text>
+<text x="1375" y="120" text-anchor="middle" font-family="Inter" font-size="9" fill="#ffcc80">Real-time stream source</text></g>
+
+<!-- ── LANE 2a: BATCH INGESTION ── -->
+<rect x="10" y="162" width="770" height="112" rx="8" fill="#ede7f6" fill-opacity="0.4" stroke="#b39ddb" stroke-width="1"/>
+<text x="20" y="182" font-family="Inter" font-size="9" font-weight="700" fill="#4527a0" letter-spacing="1.5">BATCH INGESTION  ✓ DONE</text>
+<g class="nd"><rect x="120" y="174" width="220" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="230" y="194" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Python + MNE</text>
+<text x="230" y="210" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Direct .edf/.gdf · epoch extract</text>
+<text x="230" y="226" text-anchor="middle" font-family="Inter" font-size="10" fill="#ce93d8">1s baseline · 3s post-event</text>
+<text x="230" y="242" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">ICA removal via ICLabel</text></g>
+<g class="nd"><rect x="370" y="174" width="190" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="465" y="194" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">MongoDB</text>
+<text x="465" y="210" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Subject metadata · 118 subjects</text>
+<text x="465" y="226" text-anchor="middle" font-family="Inter" font-size="10" fill="#ce93d8">DONE · 0 failures</text>
+<text x="465" y="242" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">Flexible schema</text></g>
+<g class="nd"><rect x="590" y="174" width="178" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="679" y="194" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Cassandra</text>
+<text x="679" y="210" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">20,505 epochs · list&lt;float&gt;</text>
+<text x="679" y="226" text-anchor="middle" font-family="Inter" font-size="10" fill="#ce93d8">DONE · left/right/rest</text>
+<text x="679" y="242" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">0 duplicates</text></g>
+
+<!-- ── LANE 2b: REAL-TIME STREAMING ── -->
+<rect x="1060" y="162" width="990" height="112" rx="8" fill="#e0f7fa" fill-opacity="0.45" stroke="#80deea" stroke-width="1"/>
+<text x="1072" y="182" font-family="Inter" font-size="9" font-weight="700" fill="#006064" letter-spacing="1.5">REAL-TIME INGESTION &amp; STREAMING  (Week 3)</text>
+<g class="nd"><rect x="1100" y="174" width="250" height="84" rx="8" fill="#00838f" stroke="#006064" stroke-width="1.5"/>
+<text x="1225" y="194" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Apache Kafka</text>
+<text x="1225" y="210" text-anchor="middle" font-family="Inter" font-size="10" fill="#b2ebf2">raw-eeg · trial-markers · predictions</text>
+<text x="1225" y="226" text-anchor="middle" font-family="Inter" font-size="10" fill="#80deea">2048Hz stream simulation</text>
+<text x="1225" y="242" text-anchor="middle" font-family="Inter" font-size="9" fill="#4dd0e1">from private data replay</text></g>
+<g class="nd"><rect x="1390" y="174" width="250" height="84" rx="8" fill="#00838f" stroke="#006064" stroke-width="1.5"/>
+<text x="1515" y="194" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Apache Flink</text>
+<text x="1515" y="210" text-anchor="middle" font-family="Inter" font-size="10" fill="#b2ebf2">Real-time bandpass + artifact detect</text>
+<text x="1515" y="226" text-anchor="middle" font-family="Inter" font-size="10" fill="#80deea">Sub-100ms latency</text>
+<text x="1515" y="242" text-anchor="middle" font-family="Inter" font-size="9" fill="#4dd0e1">stateful operators</text></g>
+<g class="nd"><rect x="1680" y="174" width="250" height="84" rx="8" fill="#00838f" stroke="#006064" stroke-width="1.5"/>
+<text x="1805" y="194" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Kafka Streams</text>
+<text x="1805" y="210" text-anchor="middle" font-family="Inter" font-size="10" fill="#b2ebf2">4-second rolling epoch buffer</text>
+<text x="1805" y="226" text-anchor="middle" font-family="Inter" font-size="10" fill="#80deea">Per-channel windowing</text>
+<text x="1805" y="242" text-anchor="middle" font-family="Inter" font-size="9" fill="#4dd0e1">onset detection</text></g>
+
+<!-- ── LANE 3: BATCH PROCESSING ── -->
+<rect x="10" y="288" width="1040" height="112" rx="8" fill="#fff8e1" fill-opacity="0.55" stroke="#ffd54f" stroke-width="1"/>
+<text x="20" y="308" font-family="Inter" font-size="9" font-weight="700" fill="#e65100" letter-spacing="1.5">BATCH PROCESSING</text>
+<g class="nd"><rect x="120" y="300" width="230" height="84" rx="8" fill="#e65100" stroke="#bf360c" stroke-width="1.5"/>
+<text x="235" y="320" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Apache Airflow</text>
+<text x="235" y="336" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffccbc">DAG: ingest→preprocess→train</text>
+<text x="235" y="352" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffccbc">→eval→store</text>
+<text x="235" y="368" text-anchor="middle" font-family="Inter" font-size="9" fill="#ffe0b2">Pipeline orchestration</text></g>
+<g class="nd"><rect x="390" y="300" width="230" height="84" rx="8" fill="#e65100" stroke="#bf360c" stroke-width="1.5"/>
+<text x="505" y="320" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Apache Spark  ✓</text>
+<text x="505" y="336" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffccbc">Bandpass · ICA · downsample</text>
+<text x="505" y="352" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffccbc">normalize · DONE ✓</text>
+<text x="505" y="368" text-anchor="middle" font-family="Inter" font-size="9" fill="#ffe0b2">Parallel · 104 subjects</text></g>
+<g class="nd"><rect x="660" y="300" width="230" height="84" rx="8" fill="#e65100" stroke="#bf360c" stroke-width="1.5"/>
+<text x="775" y="320" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Delta Lake  ✓</text>
+<text x="775" y="336" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffccbc">Versioned Parquet epochs</text>
+<text x="775" y="352" text-anchor="middle" font-family="Inter" font-size="10" fill="#ffccbc">DONE ✓</text>
+<text x="775" y="368" text-anchor="middle" font-family="Inter" font-size="9" fill="#ffe0b2">ACID · time-travel · reproducible</text></g>
+
+<!-- ── LANE 4: STORAGE LAYER ── -->
+<rect x="10" y="414" width="2040" height="112" rx="8" fill="#fce4ec" fill-opacity="0.4" stroke="#f48fb1" stroke-width="1"/>
+<text x="20" y="434" font-family="Inter" font-size="9" font-weight="700" fill="#880e4f" letter-spacing="1.5">STORAGE LAYER</text>
+<g class="nd"><rect x="120" y="426" width="195" height="84" rx="8" fill="#880e4f" stroke="#4a148c" stroke-width="1.5"/>
+<text x="217" y="446" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">MongoDB  ✓</text>
+<text x="217" y="462" text-anchor="middle" font-family="Inter" font-size="10" fill="#f8bbd0">Subject metadata · annotations</text>
+<text x="217" y="478" text-anchor="middle" font-family="Inter" font-size="10" fill="#f48fb1">118 subjects · DONE ✓</text>
+<text x="217" y="494" text-anchor="middle" font-family="Inter" font-size="9" fill="#ce93d8">Flexible schema</text></g>
+<g class="nd"><rect x="340" y="426" width="210" height="84" rx="8" fill="#880e4f" stroke="#4a148c" stroke-width="1.5"/>
+<text x="445" y="446" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Apache Cassandra  ✓</text>
+<text x="445" y="462" text-anchor="middle" font-family="Inter" font-size="10" fill="#f8bbd0">20,505 EEG epochs</text>
+<text x="445" y="478" text-anchor="middle" font-family="Inter" font-size="10" fill="#f48fb1">left/right/rest · DONE ✓</text>
+<text x="445" y="494" text-anchor="middle" font-family="Inter" font-size="9" fill="#ce93d8">Wide-column · partitioned</text></g>
+<g class="nd"><rect x="576" y="426" width="210" height="84" rx="8" fill="#880e4f" stroke="#4a148c" stroke-width="1.5"/>
+<text x="681" y="446" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Delta Lake  ✓</text>
+<text x="681" y="462" text-anchor="middle" font-family="Inter" font-size="10" fill="#f8bbd0">Preprocessed Parquet epochs</text>
+<text x="681" y="478" text-anchor="middle" font-family="Inter" font-size="10" fill="#f48fb1">Versioned · DONE ✓</text>
+<text x="681" y="494" text-anchor="middle" font-family="Inter" font-size="9" fill="#ce93d8">ACID · time-travel</text></g>
+<g class="nd"><rect x="1060" y="426" width="200" height="84" rx="8" fill="#880e4f" stroke="#4a148c" stroke-width="1.5"/>
+<text x="1160" y="446" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Redis</text>
+<text x="1160" y="462" text-anchor="middle" font-family="Inter" font-size="10" fill="#f8bbd0">Inference cache · TTL 1hr</text>
+<text x="1160" y="478" text-anchor="middle" font-family="Inter" font-size="10" fill="#f48fb1">Last 10 predictions/subject</text>
+<text x="1160" y="494" text-anchor="middle" font-family="Inter" font-size="9" fill="#ce93d8">Week 3</text></g>
+<g class="nd"><rect x="1300" y="426" width="210" height="84" rx="8" fill="#880e4f" stroke="#4a148c" stroke-width="1.5"/>
+<text x="1405" y="446" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">pgvector</text>
+<text x="1405" y="462" text-anchor="middle" font-family="Inter" font-size="10" fill="#f8bbd0">128-dim trial embeddings</text>
+<text x="1405" y="478" text-anchor="middle" font-family="Inter" font-size="10" fill="#f48fb1">Cosine similarity search</text>
+<text x="1405" y="494" text-anchor="middle" font-family="Inter" font-size="9" fill="#ce93d8">Explainability · RAG</text></g>
+
+<!-- ── LANE 5: ML CORE ── -->
+<rect x="10" y="540" width="2040" height="112" rx="8" fill="#e8f5e9" fill-opacity="0.55" stroke="#a5d6a7" stroke-width="1"/>
+<text x="20" y="560" font-family="Inter" font-size="9" font-weight="700" fill="#1b5e20" letter-spacing="1.5">ML CORE  (Week 2)  ✓ DONE</text>
+<g class="nd"><rect x="120" y="552" width="200" height="84" rx="8" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+<text x="220" y="572" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">EEGNet</text>
+<text x="220" y="588" text-anchor="middle" font-family="Inter" font-size="10" fill="#c8e6c9">CNN · transfer learning</text>
+<text x="220" y="604" text-anchor="middle" font-family="Inter" font-size="10" fill="#a5d6a7">PhysioNet pretrain → BCI</text>
+<text x="220" y="620" text-anchor="middle" font-family="Inter" font-size="9" fill="#81c784">69.7% zero-shot F1</text></g>
+<g class="nd"><rect x="350" y="552" width="200" height="84" rx="8" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+<text x="450" y="572" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">EEG Conformer</text>
+<text x="450" y="588" text-anchor="middle" font-family="Inter" font-size="10" fill="#c8e6c9">CNN + Transformer</text>
+<text x="450" y="604" text-anchor="middle" font-family="Inter" font-size="10" fill="#a5d6a7">Local spatial + global temporal</text>
+<text x="450" y="620" text-anchor="middle" font-family="Inter" font-size="9" fill="#81c784">Negative result — reported</text></g>
+<g class="nd"><rect x="580" y="549" width="200" height="90" rx="8" fill="#1a5c1e" stroke="#0a3310" stroke-width="2.5"/>
+<text x="680" y="570" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">ShallowConvNet  ★</text>
+<text x="680" y="586" text-anchor="middle" font-family="Inter" font-size="10" fill="#c8e6c9">Freq-domain · mu/beta rhythms</text>
+<text x="680" y="602" text-anchor="middle" font-family="Inter" font-size="10" fill="#a5d6a7">50-shot LOSO: 73.9% F1</text>
+<text x="680" y="618" text-anchor="middle" font-family="Inter" font-size="9" fill="#a5ff9e">★ Main result</text>
+<text x="680" y="631" text-anchor="middle" font-family="Inter" font-size="9" fill="#69e87a">BCI illiteracy rescued</text></g>
+<g class="nd"><rect x="810" y="552" width="220" height="84" rx="8" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+<text x="920" y="572" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Ensemble + Platt</text>
+<text x="920" y="588" text-anchor="middle" font-family="Inter" font-size="10" fill="#c8e6c9">Weighted model combination</text>
+<text x="920" y="604" text-anchor="middle" font-family="Inter" font-size="10" fill="#a5d6a7">0.8 Shallow + 0.2 EEGNet</text>
+<text x="920" y="620" text-anchor="middle" font-family="Inter" font-size="9" fill="#81c784">74.0% F1 · calibrated confidence</text></g>
+<g class="nd"><rect x="1060" y="552" width="200" height="84" rx="8" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+<text x="1160" y="572" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">MLflow</text>
+<text x="1160" y="588" text-anchor="middle" font-family="Inter" font-size="10" fill="#c8e6c9">Experiment tracking</text>
+<text x="1160" y="604" text-anchor="middle" font-family="Inter" font-size="10" fill="#a5d6a7">Model registry</text>
+<text x="1160" y="620" text-anchor="middle" font-family="Inter" font-size="9" fill="#81c784">Params · metrics · artifacts</text></g>
+<g class="nd"><rect x="1300" y="552" width="200" height="84" rx="8" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+<text x="1400" y="572" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Ray Tune</text>
+<text x="1400" y="588" text-anchor="middle" font-family="Inter" font-size="10" fill="#c8e6c9">Distributed HPO</text>
+<text x="1400" y="604" text-anchor="middle" font-family="Inter" font-size="10" fill="#a5d6a7">Bayesian search</text>
+<text x="1400" y="620" text-anchor="middle" font-family="Inter" font-size="9" fill="#81c784">Parallel trials · M1 local</text></g>
+
+<!-- ── LANE 6: AGENTIC AI ── -->
+<rect x="10" y="666" width="2040" height="112" rx="8" fill="#ede7f6" fill-opacity="0.45" stroke="#b39ddb" stroke-width="1"/>
+<text x="20" y="686" font-family="Inter" font-size="9" font-weight="700" fill="#4527a0" letter-spacing="1.5">AGENTIC AI — LangGraph  (Week 3)  ✓ DONE</text>
+<g class="nd"><rect x="120" y="678" width="180" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="210" y="698" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Signal Quality</text>
+<text x="210" y="712" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Agent</text>
+<text x="210" y="728" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">Monitors Kafka</text>
+<text x="210" y="744" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">flags artifacts</text></g>
+<g class="nd"><rect x="322" y="678" width="180" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="412" y="698" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Prediction</text>
+<text x="412" y="712" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Explainer Agent</text>
+<text x="412" y="728" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">pgvector retrieval</text>
+<text x="412" y="744" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">SHAP · NL explanation</text></g>
+<g class="nd"><rect x="524" y="678" width="180" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="614" y="698" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Session Monitor</text>
+<text x="614" y="712" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Agent</text>
+<text x="614" y="728" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">Rolling accuracy</text>
+<text x="614" y="744" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">break suggestions</text></g>
+<g class="nd"><rect x="726" y="678" width="180" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="816" y="698" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Data Curator</text>
+<text x="816" y="712" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Agent</text>
+<text x="816" y="728" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">Auto-flags low quality</text>
+<text x="816" y="744" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">EMG artifact check</text></g>
+<g class="nd"><rect x="928" y="678" width="180" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="1018" y="698" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">HPO Advisor</text>
+<text x="1018" y="712" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Agent</text>
+<text x="1018" y="728" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">Reads MLflow</text>
+<text x="1018" y="744" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">suggests next config</text></g>
+<g class="nd"><rect x="1130" y="678" width="180" height="84" rx="8" fill="#4527a0" stroke="#311b92" stroke-width="1.5"/>
+<text x="1220" y="698" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Report Generator</text>
+<text x="1220" y="712" text-anchor="middle" font-family="Inter" font-size="10" fill="#d1c4e9">Agent</text>
+<text x="1220" y="728" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">Auto PDF report</text>
+<text x="1220" y="744" text-anchor="middle" font-family="Inter" font-size="9" fill="#b39ddb">MongoDB + MLflow</text></g>
+<g class="nd"><rect x="1350" y="678" width="180" height="84" rx="8" fill="#6a1b9a" stroke="#4a148c" stroke-width="1.5"/>
+<text x="1440" y="698" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">LangGraph</text>
+<text x="1440" y="714" text-anchor="middle" font-family="Inter" font-size="10" fill="#e1bee7">Orchestration</text>
+<text x="1440" y="730" text-anchor="middle" font-family="Inter" font-size="9" fill="#ce93d8">Stateful multi-agent</text>
+<text x="1440" y="746" text-anchor="middle" font-family="Inter" font-size="9" fill="#ce93d8">workflow graphs</text></g>
+
+<!-- ── LANE 7: SERVING ── -->
+<rect x="10" y="792" width="2040" height="112" rx="8" fill="#eceff1" fill-opacity="0.55" stroke="#b0bec5" stroke-width="1"/>
+<text x="20" y="812" font-family="Inter" font-size="9" font-weight="700" fill="#37474f" letter-spacing="1.5">SERVING &amp; OBSERVABILITY  (Week 3)</text>
+<g class="nd"><rect x="120" y="804" width="220" height="84" rx="8" fill="#37474f" stroke="#263238" stroke-width="1.5"/>
+<text x="230" y="824" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">FastAPI  ✓</text>
+<text x="230" y="840" text-anchor="middle" font-family="Inter" font-size="10" fill="#cfd8dc">EEG epoch in → class + confidence</text>
+<text x="230" y="856" text-anchor="middle" font-family="Inter" font-size="10" fill="#b0bec5">REST endpoint · port 8001</text>
+<text x="230" y="872" text-anchor="middle" font-family="Inter" font-size="9" fill="#90a4ae">sub-500ms latency</text></g>
+<g class="nd"><rect x="376" y="804" width="210" height="84" rx="8" fill="#37474f" stroke="#263238" stroke-width="1.5"/>
+<text x="481" y="824" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Grafana</text>
+<text x="481" y="840" text-anchor="middle" font-family="Inter" font-size="10" fill="#cfd8dc">Real-time monitoring</text>
+<text x="481" y="856" text-anchor="middle" font-family="Inter" font-size="10" fill="#b0bec5">dashboard</text>
+<text x="481" y="872" text-anchor="middle" font-family="Inter" font-size="9" fill="#90a4ae">Kafka lag · latency · accuracy</text></g>
+<g class="nd"><rect x="620" y="804" width="200" height="84" rx="8" fill="#37474f" stroke="#263238" stroke-width="1.5"/>
+<text x="720" y="824" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Prometheus</text>
+<text x="720" y="840" text-anchor="middle" font-family="Inter" font-size="10" fill="#cfd8dc">Metrics collection</text>
+<text x="720" y="856" text-anchor="middle" font-family="Inter" font-size="10" fill="#b0bec5">scraping</text>
+<text x="720" y="872" text-anchor="middle" font-family="Inter" font-size="9" fill="#90a4ae">System + model metrics</text></g>
+<g class="nd"><rect x="856" y="804" width="210" height="84" rx="8" fill="#37474f" stroke="#263238" stroke-width="1.5"/>
+<text x="961" y="824" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Apache Superset</text>
+<text x="961" y="840" text-anchor="middle" font-family="Inter" font-size="10" fill="#cfd8dc">Analytics · Delta Lake</text>
+<text x="961" y="856" text-anchor="middle" font-family="Inter" font-size="10" fill="#b0bec5">queries</text>
+<text x="961" y="872" text-anchor="middle" font-family="Inter" font-size="9" fill="#90a4ae">Cross-subject EDA</text></g>
+<g class="nd"><rect x="1104" y="804" width="220" height="84" rx="8" fill="#37474f" stroke="#263238" stroke-width="1.5"/>
+<text x="1214" y="824" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#fff">Docker Compose  ✓</text>
+<text x="1214" y="840" text-anchor="middle" font-family="Inter" font-size="10" fill="#cfd8dc">Full stack deployment</text>
+<text x="1214" y="856" text-anchor="middle" font-family="Inter" font-size="10" fill="#b0bec5">All services containerized</text>
+<text x="1214" y="872" text-anchor="middle" font-family="Inter" font-size="9" fill="#90a4ae">Kafka·Mongo·Cassandra·Redis</text></g>
+
+<!-- ═══════ EDGES ═══════ -->
+<!-- PhysioNet → MNE -->
+<path d="M225 136 L225 174" fill="none" stroke="#1565c0" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="230" y="158" font-family="Inter" font-size="9" fill="#1565c0">batch load</text>
+<!-- BCI → MNE -->
+<path d="M465 136 L465 168 L340 168 L340 174" fill="none" stroke="#1565c0" stroke-width="1.5" marker-end="url(#a)"/>
+<!-- MNE → MongoDB -->
+<path d="M340 216 L370 216" fill="none" stroke="#4527a0" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="342" y="212" font-family="Inter" font-size="9" fill="#4527a0">metadata</text>
+<!-- MongoDB → Cassandra -->
+<path d="M560 216 L590 216" fill="none" stroke="#4527a0" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="562" y="212" font-family="Inter" font-size="9" fill="#4527a0">epochs</text>
+<!-- Cassandra → Airflow -->
+<path d="M679 258 L679 290 L350 290 L350 300" fill="none" stroke="#e65100" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="490" y="287" font-family="Inter" font-size="9" fill="#e65100">trigger</text>
+<!-- Airflow → Spark -->
+<path d="M350 342 L390 342" fill="none" stroke="#e65100" stroke-width="1.5" marker-end="url(#a)"/>
+<!-- Spark → Delta Lake -->
+<path d="M620 342 L660 342" fill="none" stroke="#e65100" stroke-width="1.5" marker-end="url(#a)"/>
+<!-- Delta Lake → EEGNet -->
+<path d="M775 384 L775 540 L220 540 L220 552" fill="none" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="460" y="537" font-family="Inter" font-size="9" fill="#2e7d32">training epochs</text>
+<!-- ShallowConvNet → Ensemble -->
+<path d="M780 594 L810 594" fill="none" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#a)"/>
+<!-- Ensemble → pgvector -->
+<path d="M1030 594 L1050 594 L1050 520 L1405 520 L1405 510" fill="none" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="1055" y="517" font-family="Inter" font-size="9" fill="#2e7d32">store embeddings</text>
+<!-- MLflow → HPO Agent (dashed) -->
+<path d="M1160 636 L1160 660 L1018 660 L1018 678" fill="none" stroke="#4527a0" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+<!-- Private → Kafka -->
+<path d="M1375 136 L1375 160 L1225 160 L1225 174" fill="none" stroke="#00838f" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="1246" y="157" font-family="Inter" font-size="9" fill="#00838f">stream replay</text>
+<!-- Kafka → Flink -->
+<path d="M1350 216 L1390 216" fill="none" stroke="#00838f" stroke-width="1.5" marker-end="url(#a)"/>
+<!-- Flink → Kafka Streams -->
+<path d="M1640 216 L1680 216" fill="none" stroke="#00838f" stroke-width="1.5" marker-end="url(#a)"/>
+<!-- Kafka → Signal Quality (dashed stream monitor) -->
+<path d="M1225 258 L1225 406 L1030 406 L1030 660 L210 660 L210 678" fill="none" stroke="#4527a0" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+<text x="575" y="657" font-family="Inter" font-size="9" fill="#4527a0">stream monitor</text>
+<!-- Kafka Streams → FastAPI -->
+<path d="M1805 258 L1805 790 L230 790 L230 804" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="900" y="787" font-family="Inter" font-size="9" fill="#37474f">epoch → inference</text>
+<!-- FastAPI → Redis (dashed cache) -->
+<path d="M340 844 L1060 844" fill="none" stroke="#880e4f" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+<text x="656" y="839" font-family="Inter" font-size="9" fill="#880e4f">cache prediction</text>
+<!-- Ensemble → Prediction Explainer (dashed) -->
+<path d="M920 636 L920 658 L412 658 L412 678" fill="none" stroke="#4527a0" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+<text x="600" y="655" font-family="Inter" font-size="9" fill="#4527a0">predictions</text>
+<!-- Prediction Explainer → FastAPI -->
+<path d="M322 720 L280 720 L280 786 L230 786 L230 804" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="236" y="782" font-family="Inter" font-size="9" fill="#37474f">explanations</text>
+<!-- Prometheus → Grafana -->
+<path d="M620 844 L586 844" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#a)"/>
+
+<!-- Copyright/credit -->
+<text x="1030" y="1068" text-anchor="middle" font-family="Inter" font-size="9" fill="#9e9e9e">Janardhan Reddy · Divyansh Maurya · Chiranjeev Kumar — NYU Tandon, 2026</text>
+</svg>
+</div>
+
+<div class="legend">
+  <div class="li"><div class="ld" style="background:#1565c0"></div>Data Sources</div>
+  <div class="li"><div class="ld" style="background:#4527a0"></div>Batch Ingestion / Agents</div>
+  <div class="li"><div class="ld" style="background:#00838f"></div>Real-Time Streaming</div>
+  <div class="li"><div class="ld" style="background:#e65100"></div>Batch Processing</div>
+  <div class="li"><div class="ld" style="background:#880e4f"></div>Storage Layer</div>
+  <div class="li"><div class="ld" style="background:#2e7d32"></div>ML Core</div>
+  <div class="li"><div class="ld" style="background:#6a1b9a"></div>LangGraph</div>
+  <div class="li"><div class="ld" style="background:#37474f"></div>Serving &amp; Observability</div>
+  <div class="li">— — dashed = async / event-driven</div>
+  <div class="li">★ Main result: ShallowConvNet 73.9% F1 · 50-shot LOSO</div>
+</div>
+</body>
+</html>

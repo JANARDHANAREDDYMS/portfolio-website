@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProjectCerebro — Spark Preprocessing Pipeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #08090d;
+    --surface:   #0f1117;
+    --border:    #1e2130;
+    --stage1:    #1a1f3c;
+    --stage2:    #1a2e1f;
+    --s1accent:  #4f6ef7;
+    --s2accent:  #3ecf6e;
+    --note:      #c45c00;
+    --notetext:  #ff8c38;
+    --text:      #e2e4f0;
+    --muted:     #5a5f7a;
+    --white:     #ffffff;
+    --arrow:     #2a2f4a;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 32px 60px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* MAIN LAYOUT */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* STAGE WRAPPER */
+  .stage-wrapper {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .stage-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    padding: 16px 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    flex-shrink: 0;
+  }
+
+  .stage-label.s1 {
+    background: rgba(79, 110, 247, 0.12);
+    border: 1px solid rgba(79, 110, 247, 0.3);
+    color: var(--s1accent);
+  }
+
+  .stage-label.s2 {
+    background: rgba(62, 207, 110, 0.1);
+    border: 1px solid rgba(62, 207, 110, 0.25);
+    color: var(--s2accent);
+  }
+
+  .stage-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* STEP */
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    position: relative;
+  }
+
+  /* CONNECTOR LINE */
+  .step-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 32px;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .step-number.s1 {
+    background: rgba(79, 110, 247, 0.2);
+    border: 2px solid var(--s1accent);
+    color: var(--s1accent);
+  }
+
+  .step-number.s2 {
+    background: rgba(62, 207, 110, 0.15);
+    border: 2px solid var(--s2accent);
+    color: var(--s2accent);
+  }
+
+  .connector {
+    flex: 1;
+    width: 2px;
+    min-height: 20px;
+    margin: 4px auto;
+  }
+
+  .connector.s1 { background: rgba(79, 110, 247, 0.25); }
+  .connector.s2 { background: rgba(62, 207, 110, 0.2); }
+  .connector.hidden { background: transparent; }
+
+  /* CARD */
+  .card {
+    flex: 1;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 3px 0 0 3px;
+  }
+
+  .card.s1 {
+    background: var(--stage1);
+    border: 1px solid rgba(79, 110, 247, 0.2);
+  }
+  .card.s1::before { background: var(--s1accent); }
+
+  .card.s2 {
+    background: var(--stage2);
+    border: 1px solid rgba(62, 207, 110, 0.15);
+  }
+  .card.s2::before { background: var(--s2accent); }
+
+  .card.note {
+    background: rgba(196, 92, 0, 0.1);
+    border: 1px solid rgba(196, 92, 0, 0.3);
+  }
+  .card.note::before { background: var(--notetext); }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title.s1 { color: #8ba3ff; }
+  .card-title.s2 { color: #6ee89a; }
+  .card-title.note { color: var(--notetext); }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .badge.primary {
+    background: rgba(79, 110, 247, 0.2);
+    color: var(--s1accent);
+    border: 1px solid rgba(79, 110, 247, 0.3);
+  }
+
+  .badge.success {
+    background: rgba(62, 207, 110, 0.15);
+    color: var(--s2accent);
+    border: 1px solid rgba(62, 207, 110, 0.25);
+  }
+
+  .badge.warn {
+    background: rgba(196, 92, 0, 0.2);
+    color: var(--notetext);
+    border: 1px solid rgba(196, 92, 0, 0.3);
+  }
+
+  /* DETAIL ROWS */
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  .detail-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    padding-top: 2px;
+    min-width: 80px;
+  }
+
+  .detail-value {
+    color: var(--text);
+    font-size: 11.5px;
+  }
+
+  /* SPLIT CARDS (for filter versions) */
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .split-item {
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+    border: 1px solid rgba(62, 207, 110, 0.1);
+  }
+
+  .split-item .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--s2accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  .split-item .value {
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  .split-item.later {
+    opacity: 0.45;
+    border-style: dashed;
+  }
+
+  .split-item.later .label { color: var(--muted); }
+
+  /* ARROW BETWEEN STAGES */
+  .stage-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0;
+    gap: 52px;
+  }
+
+  .arrow-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    max-width: 200px;
+  }
+
+  .arrow-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  /* OUTPUT SHAPE */
+  .output-shape {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(62,207,110,0.2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--s2accent);
+    margin-top: 6px;
+  }
+
+  /* NOTE CARD */
+  .note-wrapper {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .note-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(196, 92, 0, 0.2);
+    border: 2px solid var(--notetext);
+    color: var(--notetext);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* INLINE CODE */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: rgba(255,255,255,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: #aab8ff;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 6px 0 14px 44px;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 6px;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid;
+  }
+
+  .tag.blue {
+    color: #8ba3ff;
+    border-color: rgba(79,110,247,0.3);
+    background: rgba(79,110,247,0.08);
+  }
+
+  .tag.green {
+    color: #6ee89a;
+    border-color: rgba(62,207,110,0.25);
+    background: rgba(62,207,110,0.08);
+  }
+
+  .tag.orange {
+    color: var(--notetext);
+    border-color: rgba(196,92,0,0.3);
+    background: rgba(196,92,0,0.08);
+  }
+
+  .tag.gray {
+    color: var(--muted);
+    border-color: var(--border);
+    background: rgba(255,255,255,0.03);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ProjectCerebro — EEG Preprocessing Pipeline</h1>
+  <p>Stage 1: Standalone Python (ICA Cleaning) &nbsp;·&nbsp; Stage 2: Apache Spark (Epoch Processing)</p>
+</div>
+
+<div class="pipeline">
+
+  <!-- ══════════════════════════════════════════
+       STAGE 1
+  ══════════════════════════════════════════ -->
+  <div class="stage-wrapper">
+    <div class="stage-label s1">Stage 1 — ICA Cleaning</div>
+    <div class="stage-content">
+
+      <!-- Step 1 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s1">1</div>
+          <div class="connector s1"></div>
+        </div>
+        <div class="card s1">
+          <div class="card-title s1">Read Full Run from Disk <span class="badge primary">Native Rate</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">PhysioNet</span>
+              <span class="detail-value">.edf files · 160Hz · 64ch · 125s per run</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">BCI IV-2a</span>
+              <span class="detail-value">.gdf files · 250Hz · 22 EEG + 3 EOG · ~45 min session</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Why full run</span>
+              <span class="detail-value">ICA needs continuous data — cannot fit on 4-second epochs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s1">2</div>
+          <div class="connector s1"></div>
+        </div>
+        <div class="card s1">
+          <div class="card-title s1">Cleaning Branch <span class="badge primary">Broadband</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Broadband filter</span>
+              <span class="detail-value">1–100 Hz · keeps full artifact frequency range visible to ICA</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">CAR</span>
+              <span class="detail-value">Common Average Reference · stabilizes ICA decomposition</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">ICA method</span>
+              <span class="detail-value">Extended Infomax · required by ICLabel classifier</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">n_components</span>
+              <span class="detail-value">0.95 variance explained · data-driven selection</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">PhysioNet</span>
+              <span class="detail-value">ICLabel → classify components → remove non-brain</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">BCI IV-2a</span>
+              <span class="detail-value">EOG regression (ocular) → ICLabel (muscle + other)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s1">3</div>
+          <div class="connector hidden"></div>
+        </div>
+        <div class="card s1">
+          <div class="card-title s1">Save Cleaned .fif Files to Disk</div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Format</span>
+              <span class="detail-value">MNE native .fif · preserves all metadata and events</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Why save</span>
+              <span class="detail-value">ICA takes hours — save output so Spark can restart without redoing ICA</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Rate</span>
+              <span class="detail-value">Still at native rate (160Hz / 250Hz) — resampling happens in Stage 2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STAGE TRANSITION ARROW -->
+  <div class="stage-arrow">
+    <div class="arrow-line"></div>
+    <div class="arrow-box">cleaned .fif files on disk → Spark reads here</div>
+    <div class="arrow-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       STAGE 2
+  ══════════════════════════════════════════ -->
+  <div class="stage-wrapper">
+    <div class="stage-label s2">Stage 2 — Spark Preprocessing</div>
+    <div class="stage-content">
+
+      <!-- Step 1 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s2">1</div>
+          <div class="connector s2"></div>
+        </div>
+        <div class="card s2">
+          <div class="card-title s2">Read Cleaned .fif Files <span class="badge success">Parallel</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Spark mode</span>
+              <span class="detail-value">Local[*] · uses all 8 M1 CPU cores simultaneously</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Partition</span>
+              <span class="detail-value">One Spark task per subject per run · fully independent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s2">2</div>
+          <div class="connector s2"></div>
+        </div>
+        <div class="card s2">
+          <div class="card-title s2">Apply Task-Specific Filter <span class="badge success">4 Versions</span></div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="label">Version A — Primary</div>
+              <div class="value">8–30 Hz bandpass · mu + beta motor imagery bands</div>
+            </div>
+            <div class="split-item">
+              <div class="label">Version B — Ablation 1</div>
+              <div class="value">4–38 Hz bandpass · wider band comparison</div>
+            </div>
+            <div class="split-item later">
+              <div class="label">Version C — Ablation 2 (later)</div>
+              <div class="value">Overlapping filter bank · 4-16, 12-24, 20-36, 32-44 Hz</div>
+            </div>
+            <div class="split-item later">
+              <div class="label">Version D — Ablation 3 (later)</div>
+              <div class="value">Minimal · no task bandpass · anti-alias only</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s2">3</div>
+          <div class="connector s2"></div>
+        </div>
+        <div class="card s2">
+          <div class="card-title s2">Epoch Extraction <span class="badge success">Native Timing</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Window</span>
+              <span class="detail-value">–1.0s baseline + 3.0s post-cue = 4.0s total</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">PhysioNet anchor</span>
+              <span class="detail-value">T1 = left fist · T2 = right fist · cue onset</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">BCI IV-2a anchor</span>
+              <span class="detail-value">Event 769 = left · 770 = right · cue onset at t=2s</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Rest epochs</span>
+              <span class="detail-value">Inter-trial periods · 1.0s buffer each side · 4.0s window</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Skip</span>
+              <span class="detail-value">Event 1023 + h.ArtifactSelection==1 (BCI IV-2a expert marks)</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Classes</span>
+              <span class="detail-value">left=0 · right=1 · rest=2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s2">4</div>
+          <div class="connector s2"></div>
+        </div>
+        <div class="card s2">
+          <div class="card-title s2">Resample Epochs to 128 Hz <span class="badge success">Common Rate</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">PhysioNet</span>
+              <span class="detail-value">160 Hz → 128 Hz · single step · MNE anti-alias automatic</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">BCI IV-2a</span>
+              <span class="detail-value">250 Hz → 128 Hz · single step · MNE anti-alias automatic</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Private</span>
+              <span class="detail-value">2048 Hz → 512 Hz → 128 Hz · staged · avoids aliasing</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Result</span>
+              <span class="detail-value">All epochs: 4s × 128Hz = 512 samples per channel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s2">5</div>
+          <div class="connector s2"></div>
+        </div>
+        <div class="card s2">
+          <div class="card-title s2">Baseline Correction <span class="badge success">Per Epoch · Per Channel</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Method</span>
+              <span class="detail-value">Subtract mean of first 128 samples (–1.0s to 0.0s) from all 512</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Why</span>
+              <span class="detail-value">Removes DC offset and amplitude differences across subjects and hardware</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Scope</span>
+              <span class="detail-value">Independent per channel per epoch · no cross-epoch stats</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s2">6</div>
+          <div class="connector s2"></div>
+        </div>
+        <div class="card s2">
+          <div class="card-title s2">Channel Alignment <span class="badge success">Cross-Hardware</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Step 1</span>
+              <span class="detail-value">Standardize names · PhysioNet uppercase · BCI IV-2a apply map · Private already uppercase</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Step 2</span>
+              <span class="detail-value">Drop non-EEG · Private: A1 A2 EMG1 EMG2 ECG1 ECG2 · BCI: EOG channels</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Step 3</span>
+              <span class="detail-value">Select 5 common channels: <code>FZ C3 CZ C4 PZ</code> · verified across all datasets</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Step 4</span>
+              <span class="detail-value">equalize_channels() · identical ordering across all three datasets</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">After NYU</span>
+              <span class="detail-value">Expand to 11 channels: + FC3 FCZ FC4 CP3 CPZ CP4</span>
+            </div>
+          </div>
+          <div class="output-shape">
+            Output shape: (5, 512) per epoch &nbsp;·&nbsp; identical across PhysioNet · BCI IV-2a · Private
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="step">
+        <div class="step-line">
+          <div class="step-number s2">7</div>
+          <div class="connector hidden"></div>
+        </div>
+        <div class="card s2">
+          <div class="card-title s2">Write to Delta Lake <span class="badge success">Versioned Parquet</span></div>
+          <div class="details">
+            <div class="detail-row">
+              <span class="detail-label">Version A</span>
+              <span class="detail-value"><code>delta_lake/eeg_epochs_8_30hz/</code></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Version B</span>
+              <span class="detail-value"><code>delta_lake/eeg_epochs_4_38hz/</code></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Schema</span>
+              <span class="detail-value">epoch_id · subject_id · dataset · label · label_code · amplitudes (5×512)</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Benefits</span>
+              <span class="detail-value">ACID transactions · time travel · columnar reads · compressed</span>
+            </div>
+          </div>
+          <div class="tag-row">
+            <span class="tag green">20,505 epochs</span>
+            <span class="tag green">3 classes</span>
+            <span class="tag green">2 filter versions</span>
+            <span class="tag green">ready for ML training</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NOTE -->
+  <div class="note-wrapper">
+    <div class="note-icon">!</div>
+    <div class="card note" style="margin-bottom:0;">
+      <div class="card-title note">Week 2 — NOT in Spark</div>
+      <div class="details">
+        <div class="detail-row">
+          <span class="detail-label">EA alignment</span>
+          <span class="detail-value">Euclidean Alignment fitted on training epochs only · applied to val/test · prevents data leakage</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Z-score norm</span>
+          <span class="detail-value">Computed from training split stats only · applied consistently to val/test</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Why deferred</span>
+          <span class="detail-value">Both require knowing train/val/test split first · computing on all epochs = data leakage = inflated NeurIPS results</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
