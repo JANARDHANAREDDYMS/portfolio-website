@@ -149,7 +149,7 @@ import { projects } from '../data/projects';
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <Link to={`/projects/${project.slug}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-white/80 transition-colors">
+              <Link to={`/projects/${project.slug}/`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-white/80 transition-colors">
                 View details
                 <SvgIcon><polyline points="9 18 15 12 9 6" /></SvgIcon>
               </Link>
