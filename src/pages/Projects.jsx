@@ -52,6 +52,11 @@ import { projects } from '../data/projects';
     MLflow: <SvgIcon><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-7"/></SvgIcon>,
     pgvector: <SvgIcon><ellipse cx="12" cy="5" rx="7" ry="3"/><path d="M5 5v8c0 1.7 3.1 3 7 3s7-1.3 7-3V5"/
   ><path d="M8 20l8-8"/><path d="M16 12v6h-6"/></SvgIcon>,
+    HTML: <SvgIcon><path d="M4 3h16l-1.5 17L12 22l-6.5-2L4 3z"/><path d="M8 8h8"/><path d="M8.5 12h7L15 17l-3 1-3-1-.2-2"/></SvgIcon>,
+    CSS: <SvgIcon><path d="M4 3h16l-1.5 17L12 22l-6.5-2L4 3z"/><path d="M8 8h8l-.4 4H9"/><path d="M15.2 12l-.4 5-2.8 1-2.8-1-.2-2"/></SvgIcon>,
+    JavaScript: <SvgIcon><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8v7a2 2 0 0 1-2 2"/><path d="M14 17c1.5 0 3-.7 3-2 0-2.5-4-1.5-4-4 0-1.3 1.2-2 2.7-2"/></SvgIcon>,
+    Leaflet: <SvgIcon><path d="M12 21s-7-4.5-7-11a7 7 0 0 1 14 0c0 6.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/><path d="M5 21h14"/></SvgIcon>,
+    'NYC DOT': <SvgIcon><path d="M4 20V9l8-5 8 5v11"/><path d="M8 20v-7h8v7"/><path d="M10 9h4"/><path d="M12 13v7"/></SvgIcon>,
   };
 
   const projectIcons = {
@@ -72,6 +77,14 @@ import { projects } from '../data/projects';
         <path d="M4 19h16"/>
         <path d="M7 15l4-4 3 3 5-7"/>
         <circle cx="17" cy="7" r="2"/>
+      </SvgIcon>
+    ),
+    'Parade Cam': (
+      <SvgIcon size={28}>
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+        <path d="M8 21l8-8"/>
+        <path d="M15 7h3"/>
       </SvgIcon>
     ),
     'Code Sensei': (

@@ -126,6 +126,53 @@ export const projects = [
     },
   },
   {
+    id: 6,
+    slug: 'paradecam',
+    title: 'Parade Cam',
+    date: 'Jun 2026',
+    repo: '#',
+    description:
+      'Built a Knicks parade camera viewer after I could not find a good place to watch the parade online, using NYC traffic camera feeds so my friend and I could follow the route live.',
+    bullets: [
+      'Created a standalone live-viewing page at janardhanr.com/paradecam with a main camera, secondary camera strip, route map, clock, and event status indicator.',
+      'Integrated NYC traffic camera image endpoints with automatic cache-busting refreshes, error states, and retry behavior for unreliable live camera feeds.',
+      'Mapped parade-adjacent camera locations with Leaflet, letting viewers switch feeds from either the map markers or the secondary camera panels.',
+      'Designed a Knicks-themed responsive interface with desktop and mobile backgrounds, zoom and pan controls, and quick visual context for each selected camera.',
+    ],
+    tech: ['HTML', 'CSS', 'JavaScript', 'Leaflet', 'NYC DOT'],
+    color: '#006BB6',
+    assetsBase: '/paradecam',
+    demoVideo: '/paradecam/index.html',
+    pipelineDiagram: '/paradecam/index.html',
+    sourceCode: '#',
+    resources: [
+      {
+        label: 'Live App',
+        href: '/paradecam/',
+        description: 'Standalone Knicks Parade Cam viewer using NYC traffic camera feeds.',
+      },
+    ],
+    detail: {
+      headline: 'A quick-build live camera hub for watching the Knicks parade through NYC traffic cameras.',
+      overview:
+        'Parade Cam came from a practical problem: I could not find a reliable place to watch the Knicks parade online, so I built a small web app that let me and my friend follow the route through NYC traffic camera feeds. The page combines live-refreshing camera images, a route map, camera switching, and Knicks-themed event UI into one shareable link.',
+      achievement:
+        'The main win was speed and usefulness: a standalone viewer that turned scattered NYC DOT camera endpoints into one simple parade-watching experience at janardhanr.com/paradecam.',
+      architecture:
+        'Parade Cam is a static HTML, CSS, and JavaScript app served from the portfolio public directory. It uses Leaflet for the map, predefined NYC traffic camera endpoints for live images, timed refreshes for current frames, and client-side state to switch the main feed, update secondary feeds, and handle camera load errors.',
+      demo:
+        'The embedded app shows the full Parade Cam experience: a main camera feed, secondary cameras, parade route map, live status, camera labels, and zoom controls.',
+      docs: [
+        'NYC traffic camera feed integration',
+        'Leaflet route map and camera markers',
+        'Main and secondary camera switching',
+        'Auto-refresh, cache busting, and retry behavior',
+        'Knicks-themed responsive event interface',
+        'Standalone static deployment under /paradecam',
+      ],
+    },
+  },
+  {
     id: 1,
     slug: 'code-sensei',
     title: 'Code Sensei',
