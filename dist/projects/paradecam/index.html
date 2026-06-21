@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Janardhana Reddy | Software Engineer | NYU CS</title>
+    <meta name="description" content="Software Engineer specializing in distributed systems, agent infrastructure, and backend development. Built Code Sensei (10K+ users) and real-time data pipelines at NYU.">
+    
+    <!-- Google Analytics with Internal Traffic Filtering -->
+    <script>
+      // Check URL for ?internal=true parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('internal') === 'true') {
+        localStorage.setItem('is_internal_user', 'true');
+        console.log('✓ Marked as internal user - your visits will be filtered out');
+      }
+      
+      // Check if user is internal
+      const isInternal = localStorage.getItem('is_internal_user') === 'true';
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      // Don't load analytics on localhost
+      if (!isLocal) {
+        // Load Google Analytics script
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-9NHJ76DR3N';
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        // Configure with traffic_type parameter if internal
+        if (isInternal) {
+          gtag('config', 'G-9NHJ76DR3N', {
+            'traffic_type': 'internal'
+          });
+          console.log('📊 Analytics loaded - tagged as INTERNAL (filtered out)');
+        } else {
+          gtag('config', 'G-9NHJ76DR3N');
+          console.log('📊 Analytics loaded - tagged as EXTERNAL (tracked)');
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-D6q-SGS3.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DO5daUQg.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
