@@ -115,6 +115,25 @@ import { projects } from '../data/projects';
   };
 
   function ProjectCard({ project }) {
+    const projectTitle = project.liveUrl ? (
+      <a href={project.liveUrl} className="hover:text-white/80 transition-colors">
+        {project.title}
+      </a>
+    ) : (
+      project.title
+    );
+    const projectCta = project.liveUrl ? (
+      <a href={project.liveUrl} className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-white/80 transition-colors">
+        View live demo
+        <SvgIcon><polyline points="9 18 15 12 9 6" /></SvgIcon>
+      </a>
+    ) : (
+      <Link to={`/projects/${project.slug}/`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-white/80 transition-colors">
+        View details
+        <SvgIcon><polyline points="9 18 15 12 9 6" /></SvgIcon>
+      </Link>
+    );
+
     return (
       <article
         className="min-h-[520px] w-full p-5 shadow-2xl transition-colors duration-300 md:p-8 lg:min-h-[500px]"
@@ -127,7 +146,7 @@ import { projects } from '../data/projects';
                 <div className="flex h-11 w-15 flex-shrink-0 items-center justify-center bg-white" style={{ color: project.color, borderRadius: '14px' }}>
                   {projectIcons[project.title]}
                 </div>
-                <h3 className="text-3xl font-bold leading-tight">{project.title}</h3>
+                <h3 className="text-3xl font-bold leading-tight">{projectTitle}</h3>
               </div>
               <span className="text-sm font-medium text-white/80">{project.date}</span>
             </div>
@@ -162,10 +181,7 @@ import { projects } from '../data/projects';
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <Link to={`/projects/${project.slug}/`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-white/80 transition-colors">
-                View details
-                <SvgIcon><polyline points="9 18 15 12 9 6" /></SvgIcon>
-              </Link>
+              {projectCta}
               {project.repo !== '#' && (
                 <a href={project.repo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-white/75 hover:text-white transition-colors">
                   <SvgIcon><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></SvgIcon>

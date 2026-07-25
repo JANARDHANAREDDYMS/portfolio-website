@@ -222,6 +222,12 @@ function ProjectDetail() {
                   <ExternalLinkIcon />
                 </a>
               )}
+              {project.demoVideo && (
+                <a href={project.demoVideo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-gray-950 px-4 py-2.5 text-sm font-semibold text-gray-950 hover:bg-white/70" style={{ borderRadius: '8px' }}>
+                  Demo Video
+                  <ExternalLinkIcon />
+                </a>
+              )}
             </div>
           </div>
 
