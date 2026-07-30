@@ -1,3 +1,89 @@
+const talentRadarProject = {
+    id: 7,
+    slug: 'talentradar',
+    title: 'TalentRadar',
+    date: 'Jul 2026',
+    repo: '#',
+    description:
+      'Built an AI-powered job search intelligence platform on Palantir Foundry that helps F1-OPT and international students find high-fit roles, visa-friendly companies, warm contacts, and personalized outreach in one workflow.',
+    bullets: [
+      'Ingested live job postings from 35+ top tech companies by detecting each company\'s ATS provider across Lever, Greenhouse, and Ashby, producing a continuously updated dataset of 3,600+ structured roles.',
+      'Modeled Jobs, Candidates, MatchScores, and Contacts as Palantir Foundry ontology objects so search, scoring, caching, and downstream workflows operate on governed structured data.',
+      'Built resume parsing with PDF.js and an AIP Logic function that extracts skills, target titles, education, and previous employer directly from uploaded PDFs.',
+      'Created AI matching and outreach workflows that score every eligible job, explain skill overlaps and gaps, flag visa compatibility, discover warm contacts, and draft personalized LinkedIn messages.',
+    ],
+    tech: ['Palantir Foundry', 'AIP Logic', 'Python', 'PDF.js', 'Ontology', 'People Data Labs'],
+    color: '#2F6F73',
+    assetsBase: '/projects/talentradar',
+    demoVideo: 'https://youtu.be/aSHw1Lkzvpo',
+    architectureImage: '/projects/talentradar/architecture.jpg',
+    sourceCode: '#',
+    resources: [],
+    detail: {
+      headline: 'An AI-powered job search intelligence platform on Palantir Foundry for international students navigating the US job market.',
+      overview:
+        'TalentRadar replaces blind job applications with a data-driven workflow for fit, sponsorship signal, networking, and outreach. Built entirely on Palantir Foundry, it combines live ATS job ingestion, ontology-backed candidate and job objects, AI match scoring, contact discovery, and personalized outreach drafting into a two-minute workflow for F1-OPT and international students.',
+      achievement:
+        'The main achievement is turning a fragmented, hours-long job search process into one integrated Foundry workflow: 3,600+ live roles from 35+ companies, resume-derived candidate profiles, ranked job matches, warm contact discovery, and ready-to-send outreach drafts.',
+      architecture:
+        'TalentRadar runs on Palantir Foundry. A Python ingestion pipeline detects each target company\'s ATS provider across Lever, Greenhouse, and Ashby, pulls live jobs through their APIs, and writes structured Job objects into the Foundry ontology. Candidate profiles are created from uploaded resumes using PDF.js and the extractResumeInfo AIP Logic function. The matchScorer and outreachDrafter AIP Logic functions operate over Candidate, Job, MatchScore, and Contact ontology objects, while People Data Labs powers contact discovery for alumni, previous-company connections, and engineers at the target company.',
+      demo:
+        'The demo shows a user moving from resume upload and company search to ranked job matches, visa-aware recommendations, discovered contacts, and a personalized LinkedIn outreach draft.',
+      docs: [
+        'Palantir Foundry ontology for Jobs, Candidates, MatchScores, and Contacts',
+        'Python ATS ingestion across Lever, Greenhouse, Ashby, and custom web scraper',
+        'Resume parsing with PDF.js and extractResumeInfo AIP Logic',
+        'Parallel match scoring with skill gaps, visa compatibility, and Apply, Stretch, or Skip recommendations',
+        'People Data Labs contact discovery for alumni, previous-company ties, and target-company engineers',
+        'Personalized LinkedIn outreach generation with outreachDrafter',
+      ],
+      docDetails: {
+        'Palantir Foundry ontology for Jobs, Candidates, MatchScores, and Contacts': [
+          'TalentRadar\'s ontology is the backbone of the platform: four interconnected object types that store, relate, and serve all data flowing through the system.',
+          'Job is the primary object type, ingested continuously from major companies across ATS platforms. Each object stores title, company, location, department, description, visa sponsorship, ATS source, work type, and job ID. The job URL is used as the primary key, which keeps pipeline reruns idempotent and prevents duplicate postings.',
+          'Candidate stores the job seeker profile: name, skills, resume text, preferred roles, preferred locations, visa status, and years of experience. matchScorer and outreachDrafter both read from this object, so updating a profile immediately affects future scoring and outreach.',
+          'MatchScore caches AI results with score, recommendation, skill overlap, skill gaps, title match, location match, visa flag, and job ID. Contact stores discovered people from People Data Labs, including role, company, category, LinkedIn URL, school overlap, and relevance score.',
+          'The main tradeoff is strict primary-key matching on job URLs and fallback handling for Foundry datasource suffixes. The benefit is a clean ontology model that can support future Workshop dashboards and analytics without schema changes.',
+        ],
+        'Python ATS ingestion across Lever, Greenhouse, Ashby, and custom web scraper': [
+          'The job_discovery.py pipeline is built to cover standard ATS APIs and proprietary job boards. It auto-detects the ATS for each company and falls back to a custom scraper when no supported ATS endpoint is available.',
+          'For each company, the pipeline probes Lever, Greenhouse, then Ashby. The first endpoint returning a valid response is used, so adding a new company usually means adding its name to a list instead of writing company-specific ingestion logic.',
+          'For proprietary careers pages, a Firecrawl-powered scraper extracts listings and normalizes them into the same schema as ATS-sourced roles. That keeps TalentRadar from being limited to only companies using Lever, Greenhouse, or Ashby.',
+          'All sources are normalized into job ID, title, company, location, department, description, requirements, work type, visa sponsorship, ATS source, and fetched timestamp. HTML-heavy descriptions are cleaned before storage.',
+          'Visa sponsorship is inferred from explicit language in each description. Positive sponsorship phrases map to YES, restrictive language maps to NO, and everything else is UNCLEAR so users see honest signal rather than false certainty.',
+        ],
+        'Resume parsing with PDF.js and extractResumeInfo AIP Logic': [
+          'Resume parsing uses client-side text extraction followed by server-side AI structuring in Palantir AIP Logic.',
+          'When a user uploads a resume PDF, PDF.js runs in the browser, reads the file as an ArrayBuffer, iterates through the pages, and concatenates text content into one resume string. That text is saved to the Candidate object through updateCandidateProfile.',
+          'extractResumeInfo then reads candidate.resume_text and returns a typed struct with skills, recommended titles, education, and previousCompany. The React frontend uses that result to auto-populate profile fields without manual entry.',
+          'Running the LLM step through AIP Logic keeps credentials server-side, provides audit logging, and lets the extraction logic evolve independently of the frontend.',
+          'The result is a resume-to-profile flow that fills skills, target roles, education, and recent employer in under 10 seconds.',
+        ],
+        'Parallel match scoring with skill gaps, visa compatibility, and Apply, Stretch, or Skip recommendations': [
+          'Match scoring is the core intelligence layer. Every eligible job is scored against the candidate profile through matchScorer, then cached in the Foundry ontology for instant repeat searches.',
+          'Before any AI call, TalentRadar applies hard filters: jobs that explicitly reject sponsorship are removed, jobs outside preferred locations are removed unless remote, and senior roles are removed for candidates with too little experience.',
+          'matchScorer takes a Candidate object and Job object and returns score, recommendation, skill overlap, skill gaps, title match, location match, experience match, and visa flag. It reads the full resume and job description for role-specific scoring rather than shallow keyword matching.',
+          'Jobs are scored in parallel batches of five with Promise.all. The UI updates progress as each batch completes and re-sorts results by score, so the strongest roles surface before the full scoring run finishes.',
+          'Scores are saved as MatchScore objects keyed by job ID. Cached scores load instantly on later searches, while a force-rescore path can bypass the cache and overwrite stale results after a profile change. Scores 7+ map to Apply, 5-6 to Stretch, and below 5 to Skip.',
+        ],
+        'People Data Labs contact discovery for alumni, previous-company ties, and target-company engineers': [
+          'Contact discovery turns cold outreach into warmer outreach by finding people with a real connection to the candidate before a message is drafted.',
+          'TalentRadar runs three People Data Labs searches for each target company: alumni from the candidate\'s university, people who previously worked at the candidate\'s last employer, and general engineers at the company as a fallback.',
+          'Queries use PDL Elasticsearch syntax against job_company_website, such as palantir.com, instead of company name. That avoids false matches and gives cleaner results for companies with similar names.',
+          'Results are deduplicated by PDL person ID and kept in priority order: alumni first, previous-company connections second, engineers third. Each contact receives a category badge so the user understands why that person was surfaced.',
+          'Contacts are saved as Contact objects through createContact. Repeat company visits load contacts from Foundry instead of calling PDL again, saving API credits and reducing lookup latency.',
+        ],
+        'Personalized LinkedIn outreach generation with outreachDrafter': [
+          'outreachDrafter generates LinkedIn messages that are specific to the role, the recipient, and the candidate\'s actual background.',
+          'The function takes Candidate, Contact, and Job objects as inputs and returns a structured draft with subject, greeting, opening line, optional alumni line, four fit points, and closing.',
+          'If the contact is tagged as an alum, the draft includes a short shared-school acknowledgment. If there is no alumni connection, that line is omitted rather than forced.',
+          'The four fit points are generated from the job description and resume text. Each point references a concrete project or metric and connects it to a stated job requirement, avoiding generic lines like simply claiming strong Python skills.',
+          'The UI presents the message with Copy and Open LinkedIn actions side by side, turning job discovery, contact selection, and a ready-to-send message into a workflow that can be completed in under two minutes.',
+        ],
+      },
+    },
+};
+
 export const projects = [
   {
     id: 4,
@@ -199,6 +285,7 @@ export const projects = [
       docs: ['Assessment generation', 'Code execution sandboxing', 'Hinting workflow', 'Deployment and scaling notes'],
     },
   },
+  talentRadarProject,
   {
     id: 2,
     slug: 'nyu-enrolls',

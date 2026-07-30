@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { getProjectBySlug } from '../data/projects';
 
@@ -14,6 +14,13 @@ const ExternalLinkIcon = () => (
     <path d="M15 3h6v6" />
     <path d="M10 14L21 3" />
     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
   </svg>
 );
 
@@ -75,6 +82,50 @@ function ScrollableDiagram({ src, title }) {
   );
 }
 
+function ScrollableImage({ src, title, large = false }) {
+  const imageFrameRef = useRef(null);
+
+  const scrollImage = (amount) => {
+    imageFrameRef.current?.scrollBy({ top: amount, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="relative mt-3">
+      <div
+        ref={imageFrameRef}
+        className={`w-full overflow-auto border border-gray-200 bg-white ${large ? 'h-[520px]' : 'h-[360px]'}`}
+        style={{ borderRadius: '8px' }}
+      >
+        <img
+          src={src}
+          alt={title}
+          className={`h-auto max-w-none ${large ? 'w-[1200px]' : 'w-full'}`}
+        />
+      </div>
+      <div className="absolute right-0 top-4 flex translate-x-1/2 flex-col gap-2">
+        <button
+          type="button"
+          onClick={() => scrollImage(-260)}
+          className="flex h-10 w-10 items-center justify-center border border-gray-300 bg-white text-gray-900 shadow-lg transition-colors hover:bg-gray-100"
+          style={{ borderRadius: '999px' }}
+          aria-label="Scroll architecture up"
+        >
+          <ChevronIcon direction="up" />
+        </button>
+        <button
+          type="button"
+          onClick={() => scrollImage(260)}
+          className="flex h-10 w-10 items-center justify-center border border-gray-300 bg-white text-gray-900 shadow-lg transition-colors hover:bg-gray-100"
+          style={{ borderRadius: '999px' }}
+          aria-label="Scroll architecture down"
+        >
+          <ChevronIcon direction="down" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function PlaceholderMedia({ title, label, children }) {
   return (
     <div className="border border-gray-300 bg-white/45 p-5 md:p-6" style={{ borderRadius: '8px' }}>
@@ -100,14 +151,18 @@ function ArchitecturePanel({ project }) {
     );
   }
 
-  if (project.architectureImage?.endsWith('.svg')) {
+  if (/\.(svg|png|jpe?g|webp)$/i.test(project.architectureImage ?? '')) {
     return (
       <div className="border border-gray-300 bg-white/45 p-5 md:p-6" style={{ borderRadius: '8px' }}>
         <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Architecture</div>
-        <div className="mt-3 overflow-hidden border border-gray-200 bg-white" style={{ borderRadius: '8px' }}>
-          <img src={project.architectureImage} alt={`${project.title} architecture diagram`} className="h-auto w-full" />
-        </div>
-        <p className="mt-3 text-sm leading-6 text-gray-600">{project.detail.architecture}</p>
+        <ScrollableImage
+          src={project.architectureImage}
+          title={`${project.title} architecture diagram`}
+          large={project.slug === 'talentradar'}
+        />
+        {project.slug !== 'talentradar' && (
+          <p className="mt-3 text-sm leading-6 text-gray-600">{project.detail.architecture}</p>
+        )}
       </div>
     );
   }
@@ -167,9 +222,61 @@ function ResourceList({ resources = [] }) {
   );
 }
 
+function ArchitectureModal({ project, onClose }) {
+  if (!project.architectureImage) {
+    return null;
+  }
+
+  const title = `${project.title} architecture diagram`;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-gray-950/70 px-4 py-6 md:px-8" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="mx-auto flex h-full max-w-7xl flex-col border border-gray-300 bg-[#F3EDE5] p-4 shadow-2xl md:p-5" style={{ borderRadius: '8px' }}>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Architecture</div>
+            <h2 className="mt-1 text-xl font-bold text-gray-950">{project.title}</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center border border-gray-300 bg-white text-gray-900 shadow-sm transition-colors hover:bg-gray-100"
+            style={{ borderRadius: '999px' }}
+            aria-label="Close architecture diagram"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+
+        <div className="mt-4 min-h-0 flex-1 overflow-auto border border-gray-200 bg-white" style={{ borderRadius: '8px' }}>
+          {project.architectureImage.endsWith('.html') ? (
+            <iframe src={project.architectureImage} title={title} className="h-full min-h-[720px] w-full" />
+          ) : (
+            <img src={project.architectureImage} alt={title} className="h-auto min-w-[1200px] max-w-none" />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DocumentationDetail({ content }) {
+  const fallback = 'Implementation notes for this section are being expanded.';
+  const paragraphs = Array.isArray(content) ? content : [content ?? fallback];
+
+  return (
+    <div className="mt-2 space-y-3 text-sm leading-6 text-gray-600">
+      {paragraphs.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+    </div>
+  );
+}
+
 function ProjectDetail() {
   const { slug } = useParams();
   const project = getProjectBySlug(slug);
+  const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
 
   if (!project) {
     return <Navigate to="/" replace />;
@@ -228,6 +335,17 @@ function ProjectDetail() {
                   <ExternalLinkIcon />
                 </a>
               )}
+              {project.architectureImage && (
+                <button
+                  type="button"
+                  onClick={() => setIsArchitectureOpen(true)}
+                  className="inline-flex items-center gap-2 border border-gray-950 px-4 py-2.5 text-sm font-semibold text-gray-950 hover:bg-white/70"
+                  style={{ borderRadius: '8px' }}
+                >
+                  Architecture Diagram
+                  <ExternalLinkIcon />
+                </button>
+              )}
             </div>
           </div>
 
@@ -244,9 +362,9 @@ function ProjectDetail() {
           </div>
         </section>
 
-        <section className="mt-12 grid gap-6 lg:grid-cols-2">
+        <section className={`mt-12 grid gap-6 ${project.slug === 'talentradar' ? '' : 'lg:grid-cols-2'}`}>
           <ArchitecturePanel project={project} />
-          <DemoPanel project={project} />
+          {project.slug !== 'talentradar' && <DemoPanel project={project} />}
         </section>
 
         <ResourceList resources={project.resources} />
@@ -257,14 +375,13 @@ function ProjectDetail() {
             {project.detail.docs.map((item) => (
               <div key={item} className="border border-gray-200 bg-[#F8F4EE] p-4" style={{ borderRadius: '8px' }}>
                 <h3 className="font-semibold text-gray-950">{item}</h3>
-                <p className="mt-2 text-sm leading-6 text-gray-600">
-                  Placeholder documentation block. Add diagrams, screenshots, implementation details, tradeoffs, metrics, and links for this section later.
-                </p>
+                <DocumentationDetail content={project.detail.docDetails?.[item]} />
               </div>
             ))}
           </div>
         </section>
       </div>
+      {isArchitectureOpen && <ArchitectureModal project={project} onClose={() => setIsArchitectureOpen(false)} />}
     </main>
   );
 }

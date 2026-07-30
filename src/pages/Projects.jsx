@@ -57,9 +57,23 @@ import { projects } from '../data/projects';
     JavaScript: <SvgIcon><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8v7a2 2 0 0 1-2 2"/><path d="M14 17c1.5 0 3-.7 3-2 0-2.5-4-1.5-4-4 0-1.3 1.2-2 2.7-2"/></SvgIcon>,
     Leaflet: <SvgIcon><path d="M12 21s-7-4.5-7-11a7 7 0 0 1 14 0c0 6.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/><path d="M5 21h14"/></SvgIcon>,
     'NYC DOT': <SvgIcon><path d="M4 20V9l8-5 8 5v11"/><path d="M8 20v-7h8v7"/><path d="M10 9h4"/><path d="M12 13v7"/></SvgIcon>,
+    'Palantir Foundry': <SvgIcon><path d="M12 2l8 4.5v9L12 22l-8-6.5v-9L12 2z"/><path d="M12 2v20"/><path d="M4 6.5l8 4.5 8-4.5"/><path d="M4 15.5l8-4.5 8 4.5"/></SvgIcon>,
+    'AIP Logic': <SvgIcon><path d="M12 2v5"/><path d="M12 17v5"/><path d="M4.2 6.2l3.5 3.5"/><path d="M16.3 14.3l3.5 3.5"/><path d="M2 12h5"/><path d="M17 12h5"/><circle cx="12" cy="12" r="5"/><path d="M10 12l1.5 1.5L15 10"/></SvgIcon>,
+    Python: <SvgIcon><path d="M12 2h4a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H8a3 3 0 0 0-3 3v1"/><path d="M12 22H8a3 3 0 0 1-3-3v-4a3 3 0 0 1 3-3h8a3 3 0 0 0 3-3V8"/><circle cx="10" cy="6" r="1"/><circle cx="14" cy="18" r="1"/></SvgIcon>,
+    'PDF.js': <SvgIcon><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 17v-5h2a1.5 1.5 0 0 1 0 3H8"/><path d="M13 17v-5h1.5a2.5 2.5 0 0 1 0 5H13"/></SvgIcon>,
+    Ontology: <SvgIcon><circle cx="6" cy="7" r="3"/><circle cx="18" cy="7" r="3"/><circle cx="12" cy="18" r="3"/><path d="M8.5 9l2 6"/><path d="M15.5 9l-2 6"/><path d="M9 7h6"/></SvgIcon>,
+    'People Data Labs': <SvgIcon><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2"/><circle cx="18" cy="9" r="3"/><path d="M17 21v-1a5 5 0 0 0-3-4.6"/></SvgIcon>,
   };
 
   const projectIcons = {
+    TalentRadar: (
+      <SvgIcon size={28}>
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M21 21l-5-5"/>
+        <path d="M8 11l2 2 4-5"/>
+        <path d="M6 4h10"/>
+      </SvgIcon>
+    ),
     ProjectCerebro: (
       <SvgIcon size={28}>
         <path d="M9 4a4 4 0 0 0-4 4v1a4 4 0 0 0 0 6v1a4 4 0 0 0 6 3"/>
