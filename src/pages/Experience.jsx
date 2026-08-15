@@ -7,9 +7,10 @@ const experiences = [
     duration: 'Sep 2025 – Present',
     description: 'Cloud Computing and Big Data (Graduate, Flagship Course)',
     bullets: [
-      'Taught graduate level classes on NoSQL databases, Apache Kafka, and Apache Spark, delivering live demonstrations for a flagship Cloud Computing and Big Data systems course.',
-      'Mentored student teams on cloud based system design projects, including NLP driven research paper summarization and natural language based DevOps automation systems.',
-      'Guided students in designing distributed cloud architectures, containerization, data flow design, consistency trade offs, scalability considerations, and deployment strategies.',
+      'Taught graduate-level classes on Apache Kafka, Apache Spark, and NoSQL databases, delivering live working demos on distributed data pipelines and cloud-native agentic architectures for 250 students.',
+      'Mentored 12+ student teams on AI-powered capstone projects including NLP-driven research paper summarization and natural language based DevOps automation, guiding LLM integration, prompt engineering, and RAG pipeline design.',
+      'Led weekly discussions on latest AI and cloud architecture research, synthesizing recent papers on LLM inference optimization, distributed training, and agentic system design.',
+      'Built an automated PDF grading platform that reduced grading time from 10 hours to 45 minutes per cycle for 250 students, saving 20 hours of manual effort per week without being asked.',
     ],
   },
   {
@@ -20,9 +21,10 @@ const experiences = [
     duration: 'Feb 2022 – Apr 2023',
     description: 'Software Division',
     bullets: [
-      'Spearheaded a 10 student team to develop a deep learning model using computer vision for object detection, achieving 97% accuracy in identifying warehouse items.',
-      'Designed system architecture, selecting and fine-tuning deep learning models for object detection, and improving warehouse navigation robots.',
-      'Enhanced cross-functional collaboration, partnering with other clubs to integrate software components across 4 projects, improving overall system functionality.',
+      'Led a 10-member software team to build and deploy a fine-tuned YOLOv6 object detection model on industry-specific warehouse datasets, achieving 92% mAP for autonomous navigation of mini robots in industrial environments.',
+      'Optimized model inference for embedded hardware deployment using low-level C++ systems programming, debugging GCC memory ordering issues in multi-threaded control systems managing concurrent sensor input, motor commands, and vision processing.',
+      'Led team to win the Flipkart Grid Hackathon, competing against university teams across India with a fully integrated autonomous warehouse robot system combining deep learning perception and real-time embedded control.',
+      'Architected the software system across 10 team members, defining module boundaries between computer vision, motor control, and sensor fusion components, enabling parallel development and clean integration across the full autonomous robot stack.',
     ],
   },
 ];

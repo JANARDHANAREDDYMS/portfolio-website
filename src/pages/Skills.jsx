@@ -34,6 +34,23 @@ function Skills() {
     AWS: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 12a6 6 0 0 1 12 0"/><path d="M3 12h18"/><path d="M12 6v12"/><path d="M8 18l4 3 4-3"/></svg>,
     Kubernetes: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/><circle cx="12" cy="12" r="3"/><path d="M12 9V5"/><path d="M12 19v-4"/><path d="M9.5 10.5L6 8"/><path d="M14.5 10.5L18 8"/><path d="M9.5 13.5L6 16"/><path d="M14.5 13.5L18 16"/></svg>,
     Docker: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12c-1.5-1-3-1.5-5-1h-1V8h-3V5H9v3H6v3H3v3h11c2 0 4-.5 5-1 1.5 2 3 1 3 1"/><rect x="9" y="8" width="2" height="2"/><rect x="12" y="8" width="2" height="2"/><rect x="9" y="11" width="2" height="2"/><rect x="12" y="11" width="2" height="2"/><rect x="6" y="11" width="2" height="2"/></svg>,
+    Go: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h8"/><path d="M2 12h10"/><path d="M4 16h7"/><circle cx="16" cy="12" r="5"/><path d="M18 10.5c-.8-.7-2.1-.8-3-.1-1.1.8-1.2 2.6-.2 3.5 1 .9 2.6.8 3.5-.1"/><path d="M17 12h4"/></svg>,
+    'C++': <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 8a6 6 0 1 0 0 8"/><path d="M17 9v6"/><path d="M14 12h6"/><path d="M22 9v6"/></svg>,
+    Rust: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 4.9 7 7"/><path d="m17 17 2.1 2.1"/><path d="m19.1 4.9-2.1 2.1"/><path d="M7 17l-2.1 2.1"/><path d="M10 12h4"/><path d="M14 12l2 3"/></svg>,
+    LangGraph: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="5" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="19" cy="19" r="3"/><path d="M8 11l8-5"/><path d="M8 13l8 5"/></svg>,
+    FastAPI: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M13 2 7 13h5l-1 9 6-12h-5l1-8z"/></svg>,
+    TensorRT: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6"/><path d="M12 9v6"/><path d="M8 2v2"/><path d="M12 2v2"/><path d="M16 2v2"/><path d="M8 20v2"/><path d="M12 20v2"/><path d="M16 20v2"/></svg>,
+    MLflow: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-7"/><circle cx="18" cy="7" r="2"/></svg>,
+    pgvector: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="7" ry="3"/><path d="M5 5v8c0 1.7 3.1 3 7 3s7-1.3 7-3V5"/><path d="M8 20l8-8"/><path d="M16 12v6h-6"/></svg>,
+    'Anthropic API': <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3 3 21h4l1.6-3.5h6.8L17 21h4L12 3z"/><path d="M10 14h4"/><path d="M12 9l-2 5"/></svg>,
+    Kafka: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 10.5l7-3"/><path d="M8.5 13.5l7 3"/></svg>,
+    Spark: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8z"/></svg>,
+    'Delta Lake': <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l9 16H3L12 3z"/><path d="M12 8l4.5 8h-9L12 8z"/></svg>,
+    PostgreSQL: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>,
+    Cassandra: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v5c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 10v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/><path d="M4 15v4c0 1.7 3.6 3 8 3s8-1.3 8-3v-4"/></svg>,
+    MongoDB: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s7-5 7-12a7 7 0 0 0-14 0c0 7 7 12 7 12z"/><path d="M12 22V8"/></svg>,
+    Redis: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3 3 7l9 4 9-4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg>,
+    DynamoDB: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/><path d="M8 9v10"/><path d="M16 9v10"/></svg>,
   };
 
   const skillCategories = [
@@ -41,42 +58,51 @@ function Skills() {
       title: 'Languages',
       skills: [
         { name: 'Python', proficiency: 5 },
-        { name: 'JavaScript', proficiency: 5 },
+        { name: 'Go', proficiency: 4 },
         { name: 'TypeScript', proficiency: 4 },
-        { name: 'Java', proficiency: 4 },
-        { name: 'C', proficiency: 3 },
+        { name: 'JavaScript', proficiency: 3 },
         { name: 'SQL', proficiency: 4 },
-        { name: 'HTML/CSS', proficiency: 5 },
-      ],
-    },
-    {
-      title: 'Tools',
-      skills: [
-        { name: 'VS Code', proficiency: 5 },
-        { name: 'Git', proficiency: 5 },
-        { name: 'Android Studio', proficiency: 3 },
-        { name: 'Linux', proficiency: 4 },
+        { name: 'C++', proficiency: 3 },
+        { name: 'Rust', proficiency: 2 },
       ],
     },
     {
       title: 'Frameworks',
       skills: [
-        { name: 'React', proficiency: 5 },
-        { name: 'Node.js', proficiency: 4 },
-        { name: 'Django', proficiency: 4 },
-        { name: 'Flask', proficiency: 4 },
-        { name: 'Express', proficiency: 4 },
-        { name: 'Tailwind CSS', proficiency: 4 },
         { name: 'PyTorch', proficiency: 4 },
         { name: 'TensorFlow', proficiency: 3 },
+        { name: 'LangGraph', proficiency: 4 },
+        { name: 'FastAPI', proficiency: 4 },
+        { name: 'Django', proficiency: 3 },
+        { name: 'React', proficiency: 4 },
+        { name: 'Node.js', proficiency: 3 },
       ],
     },
     {
-      title: 'Cloud/DevOps',
+      title: 'AI/ML & Cloud',
       skills: [
+        { name: 'TensorRT', proficiency: 4 },
+        { name: 'MLflow', proficiency: 4 },
+        { name: 'pgvector', proficiency: 3 },
+        { name: 'Anthropic API', proficiency: 5 },
         { name: 'AWS', proficiency: 4 },
-        { name: 'Kubernetes', proficiency: 3 },
         { name: 'Docker', proficiency: 4 },
+        { name: 'Kubernetes', proficiency: 3 },
+        { name: 'Git', proficiency: 5 },
+        { name: 'Linux', proficiency: 4 },
+      ],
+    },
+    {
+      title: 'Data Systems',
+      skills: [
+        { name: 'Kafka', proficiency: 4 },
+        { name: 'Spark', proficiency: 4 },
+        { name: 'Delta Lake', proficiency: 3 },
+        { name: 'PostgreSQL', proficiency: 4 },
+        { name: 'Cassandra', proficiency: 3 },
+        { name: 'MongoDB', proficiency: 3 },
+        { name: 'Redis', proficiency: 3 },
+        { name: 'DynamoDB', proficiency: 3 },
       ],
     },
   ];
@@ -150,12 +176,12 @@ function Skills() {
                     {category.skills.map((skill) => (
                       <div
                         key={skill.name}
-                        className="flex flex-col items-center w-20 p-3 rounded-xl hover:bg-white/80 transition-all duration-300"
+                        className="flex w-24 flex-col items-center rounded-xl p-3 transition-all duration-300 hover:bg-white/80"
                       >
                         <div className="text-gray-900 mb-2">
                           {icons[skill.name]}
                         </div>
-                        <span className="text-xs font-medium text-gray-900 mb-2 text-center whitespace-nowrap">
+                        <span className="mb-2 min-h-[2rem] text-center text-xs font-medium leading-4 text-gray-900">
                           {skill.name}
                         </span>
                         <ProficiencyBar level={skill.proficiency} />
@@ -192,10 +218,10 @@ function Skills() {
           {/* Side Text */}
           <div className="lg:w-2/5 space-y-6 lg:pt-10">
             <p className="text-gray-700 leading-relaxed">
-              I'm a Machine Learning Engineer specializing in scalable AI systems, agentic workflows, and distributed computing. I build end-to-end ML solutions, from data pipelines with Spark and Kafka to AI agents with LangChain to production deployments on AWS and GCP. My work spans brain-computer interfaces, predictive analytics, and real-time ML applications, backed by robust backend systems using FastAPI and Node.js. Currently pursuing my MS in Computer Science at NYU, where I also TA for Big Data and Cloud Computing.
+              I build scalable AI systems, agentic workflows, and distributed computing infrastructure end to end. My work spans brain-computer interfaces, RAG systems, lead intelligence platforms, and real-time ML applications, from Kafka and Spark pipelines to LangGraph agents, TensorRT-optimized inference, and production deployments on AWS.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              <span className="font-medium text-gray-900">Technical expertise:</span> Python, PyTorch, TensorFlow, LangChain, PySpark, Kafka, Flink, AWS, FastAPI, Node.js, React, Docker, Kubernetes
+              <span className="font-medium text-gray-900">Technical expertise:</span> Python, Go, TypeScript, PyTorch, TensorRT, LangGraph, FastAPI, Kafka, Spark, Delta Lake, PostgreSQL, pgvector, AWS, Docker, Kubernetes, Git, and Linux.
             </p>
           </div>
         </div>

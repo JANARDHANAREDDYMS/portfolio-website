@@ -273,10 +273,28 @@ function DocumentationDetail({ content }) {
   );
 }
 
+function AchievementBlock({ project, className = '' }) {
+  const paragraphs = Array.isArray(project.detail.achievement)
+    ? project.detail.achievement
+    : [project.detail.achievement];
+
+  return (
+    <div className={`border-l-4 bg-white/55 p-4 ${className}`} style={{ borderColor: project.color, borderRadius: '0 8px 8px 0' }}>
+      <div className="text-sm font-bold uppercase tracking-wide text-gray-600">Key Achievement</div>
+      <div className="mt-2 space-y-3">
+        {paragraphs.map((paragraph) => (
+          <p key={paragraph} className="leading-7 text-gray-800">{paragraph}</p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ProjectDetail() {
   const { slug } = useParams();
   const project = getProjectBySlug(slug);
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
+  const shouldShowAchievementBelowIntro = project?.slug === 'projectcerebro';
 
   if (!project) {
     return <Navigate to="/" replace />;
@@ -301,11 +319,8 @@ function ProjectDetail() {
             <h1 className="mt-5 text-4xl font-bold text-gray-950 md:text-6xl">{project.title}</h1>
             <p className="mt-5 max-w-3xl text-xl leading-relaxed text-gray-700">{project.detail.headline}</p>
             <p className="mt-5 max-w-3xl leading-8 text-gray-700">{project.detail.overview}</p>
-            {project.detail.achievement && (
-              <div className="mt-6 max-w-3xl border-l-4 bg-white/55 p-4" style={{ borderColor: project.color, borderRadius: '0 8px 8px 0' }}>
-                <div className="text-sm font-bold uppercase tracking-wide text-gray-600">Key Achievement</div>
-                <p className="mt-2 leading-7 text-gray-800">{project.detail.achievement}</p>
-              </div>
+            {project.detail.achievement && !shouldShowAchievementBelowIntro && (
+              <AchievementBlock project={project} className="mt-6 max-w-3xl" />
             )}
 
             <div className="mt-6 flex flex-wrap gap-2">
@@ -359,6 +374,9 @@ function ProjectDetail() {
                 </li>
               ))}
             </ul>
+            {project.detail.achievement && shouldShowAchievementBelowIntro && (
+              <AchievementBlock project={project} className="mt-6" />
+            )}
           </div>
         </section>
 

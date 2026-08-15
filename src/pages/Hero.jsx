@@ -105,7 +105,7 @@ function Hero() {
                   </p>
 
                   <p className="text-gray-700 leading-relaxed">
-                   I have built production systems at the Intersection of AI agents and Distributed Systems as part of my Coursework, Hackathons etc, Most recently, I designed Project Cerebro, a real-time brain-computer interface processing 2048 Hz EEG data through Kafka → Flink → Spark pipelines with sub-500ms latency. I've also built AI-powered platforms for interviews and lead generation, scaling to 10,000+ concurrent users.
+                    I have built production systems combining AI agents and distributed systems through coursework, personal projects, and hackathons. Most recently I designed Project Cerebro, a real-time brain-computer interface processing 2048 Hz EEG data through Kafka, MNE, and Spark pipelines with sub-500ms latency that decodes the direction in which a paralyzed patient is thinking to move. I have also built RAG pipelines using pgvector and cosine similarity search to ground agent outputs in specific source data, making AI decisions explainable and traceable. I have built AI-powered platforms for technical interviews and lead generation, scaling to 1M+ concurrent users.
                   </p>
 
                   <p className="text-gray-700 leading-relaxed">
@@ -137,9 +137,9 @@ function Hero() {
                         padding: '2px 10px',
                       }}
                     >
-                      Cloud Infrastructure
+                      ML Engineering
                     </span>
-                    , and{' '}
+                    ,{' '}
                     <span
                       className="text-white font-medium px-2 py-1"
                       style={{
@@ -150,13 +150,26 @@ function Hero() {
                         padding: '2px 10px',
                       }}
                     >
-                      Backend Development.
+                      Cloud Infrastructure
                     </span>
-                    . Outside of coding, I spend my time automating daily tasks (like building a smart grocery list from fridge photos).
+                    , and{' '}
+                    <span
+                      className="text-white font-medium px-2 py-1"
+                      style={{
+                        background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=1f2937")',
+                        backgroundSize: '100% 100%',
+                        backgroundRepeat: 'no-repeat',
+                        margin: '-2px -6px',
+                        padding: '2px 10px',
+                      }}
+                    >
+                      Backend Development
+                    </span>
+                    . Outside of coding I build things I want to exist, including a computer vision tool that detects what is running low in my fridge and finds the cheapest place to buy it nearby.
                   </p>
 
                   <p className="text-gray-700 leading-relaxed">
-                    Currently seeking new grad roles in backend engineering, agent infrastructure, and distributed systems.
+                    I am currently seeking new grad roles in backend engineering, agent infrastructure, and distributed systems.
                   </p>
                 </div>
 
@@ -177,6 +190,18 @@ function Hero() {
                   {item.icon}
                 </a>
               ))}
+              <a
+                href="/resume.pdf"
+                download
+                className="ml-2 inline-flex items-center gap-2 rounded-full border-2 border-gray-900 bg-gray-900 px-4 py-1.5 text-sm font-semibold text-[#F3EDE5] transition-all duration-200 hover:scale-105 hover:bg-transparent hover:text-gray-900"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Resume
+              </a>
             </div>
         </div>
 
@@ -204,7 +229,7 @@ function Hero() {
                   </p>
 
                   <p className="text-gray-700 leading-relaxed">
-                   I have built production systems at the Intersection of AI agents and Distributed Systems as part of my Coursework, Hackathons etc, Most recently, I designed Project Cerebro, a real-time brain-computer interface processing 2048 Hz EEG data through Kafka → Flink → Spark pipelines with sub-500ms latency. I've also built AI-powered platforms for interviews and lead generation, scaling to 10,000+ concurrent users.
+                    I have built production systems combining AI agents and distributed systems through coursework, personal projects, and hackathons. Most recently I designed Project Cerebro, a real-time brain-computer interface processing 2048 Hz EEG data through Kafka, MNE, and Spark pipelines with sub-500ms latency that decodes the direction in which a paralyzed patient is thinking to move. I have also built RAG pipelines using pgvector and cosine similarity search to ground agent outputs in specific source data, making AI decisions explainable and traceable. I have built AI-powered platforms for technical interviews and lead generation, scaling to 1M+ concurrent users.
                   </p>
 
                   <p className="text-gray-700 leading-relaxed">
@@ -235,9 +260,9 @@ function Hero() {
                     padding: '2px 10px',
                   }}
                 >
-                  Cloud Infrastructure
+                  ML Engineering
                 </span>
-                , and{' '}
+                ,{' '}
                 <span
                   className="text-white font-medium px-2 py-1"
                   style={{
@@ -248,13 +273,26 @@ function Hero() {
                     padding: '2px 10px',
                   }}
                 >
-                  Backend Development.
+                  Cloud Infrastructure
                 </span>
-                    . Outside of coding, I spend my time automating daily tasks (like building a smart grocery list from fridge photos).
+                , and{' '}
+                <span
+                  className="text-white font-medium px-2 py-1"
+                  style={{
+                    background: 'url("https://s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=1f2937")',
+                    backgroundSize: '100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                    margin: '-2px -6px',
+                    padding: '2px 10px',
+                  }}
+                >
+                  Backend Development
+                </span>
+                    . Outside of coding I build things I want to exist, including a computer vision tool that detects what is running low in my fridge and finds the cheapest place to buy it nearby.
                   </p>
 
               <p className="text-gray-700 leading-relaxed">
-                Currently seeking new grad roles in backend engineering, agent infrastructure, and distributed systems.
+                I am currently seeking new grad roles in backend engineering, agent infrastructure, and distributed systems.
               </p>
             </div>
 
@@ -275,13 +313,25 @@ function Hero() {
                   {item.icon}
                 </a>
               ))}
+              <a
+                href="/resume.pdf"
+                download
+                className="ml-2 inline-flex items-center gap-2 rounded-full border-2 border-gray-900 bg-gray-900 px-4 py-1.5 text-sm font-semibold text-[#F3EDE5] transition-all duration-200 hover:scale-105 hover:bg-transparent hover:text-gray-900"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Resume
+              </a>
             </div>
           </div>
 
           {/* Right Content - Profile Image */}
           <div className="hidden lg:flex lg:w-1/2 justify-end ">
             <div
-              className="w-[208px] h-[600px] md:w-[320px] md:h-[380px] border-[3px] overflow-hidden mt-16 mr-8"
+              className="w-[208px] h-[600px] md:w-[320px] md:h-[380px] border-[3px] overflow-hidden mt-[110px] mr-8"
               style={{ borderColor: '#172739', borderRadius: '36px' }}
             >
               <img
