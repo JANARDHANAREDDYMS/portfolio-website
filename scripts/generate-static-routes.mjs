@@ -20,4 +20,17 @@ for (const route of routes) {
   copyFileSync(indexHtml, target);
 }
 
-console.log(`Generated ${routes.length} static SPA route files.`);
+const docsRoutes = [
+  {
+    source: 'public/section-a.html',
+    target: 'docs/maincode-takehome-testresults/index.html',
+  },
+];
+
+for (const route of docsRoutes) {
+  const target = join(distDir, route.target);
+  mkdirSync(dirname(target), { recursive: true });
+  copyFileSync(route.source, target);
+}
+
+console.log(`Generated ${routes.length} static SPA route files and ${docsRoutes.length} docs route.`);
