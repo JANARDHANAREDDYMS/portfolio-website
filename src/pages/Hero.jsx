@@ -192,7 +192,8 @@ function Hero() {
               ))}
               <a
                 href="/resume.pdf"
-                download
+                target="_blank"
+                rel="noopener noreferrer"
                 className="ml-2 inline-flex items-center gap-2 rounded-full border-2 border-gray-900 bg-gray-900 px-4 py-1.5 text-sm font-semibold text-[#F3EDE5] transition-all duration-200 hover:scale-105 hover:bg-transparent hover:text-gray-900"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -315,7 +316,8 @@ function Hero() {
               ))}
               <a
                 href="/resume.pdf"
-                download
+                target="_blank"
+                rel="noopener noreferrer"
                 className="ml-2 inline-flex items-center gap-2 rounded-full border-2 border-gray-900 bg-gray-900 px-4 py-1.5 text-sm font-semibold text-[#F3EDE5] transition-all duration-200 hover:scale-105 hover:bg-transparent hover:text-gray-900"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
