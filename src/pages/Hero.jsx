@@ -191,7 +191,7 @@ function Hero() {
                 </a>
               ))}
               <a
-                href="/resume.pdf"
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-2 inline-flex items-center gap-2 rounded-full border-2 border-gray-900 bg-gray-900 px-4 py-1.5 text-sm font-semibold text-[#F3EDE5] transition-all duration-200 hover:scale-105 hover:bg-transparent hover:text-gray-900"
@@ -315,7 +315,7 @@ function Hero() {
                 </a>
               ))}
               <a
-                href="/resume.pdf"
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-2 inline-flex items-center gap-2 rounded-full border-2 border-gray-900 bg-gray-900 px-4 py-1.5 text-sm font-semibold text-[#F3EDE5] transition-all duration-200 hover:scale-105 hover:bg-transparent hover:text-gray-900"

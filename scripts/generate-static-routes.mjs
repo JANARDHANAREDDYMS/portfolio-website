@@ -11,6 +11,7 @@ if (!existsSync(indexHtml)) {
 
 const routes = [
   'error.html',
+  'resume/index.html',
   ...projects.map((project) => `projects/${project.slug}/index.html`),
 ];
 

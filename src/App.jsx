@@ -5,6 +5,7 @@ import Projects from './pages/Projects';
 import Skills from './pages/Skills';
 import Contact from './pages/Contact';
 import ProjectDetail from './pages/ProjectDetail';
+import Resume from './pages/Resume';
 
 function Home() {
   return (
@@ -23,6 +24,7 @@ function App() {
     <div className="min-h-screen" style={{ backgroundColor: '#F3EDE5', overflowX: 'clip' }}>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/resume" element={<Resume />} />
         <Route path="/projects/:slug" element={<ProjectDetail />} />
       </Routes>
     </div>
