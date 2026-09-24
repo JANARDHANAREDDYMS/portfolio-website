@@ -85,6 +85,16 @@ const talentRadarProject = {
     },
 };
 
+const projectOrder = [
+  'ProjectCerebro',
+  'Code Sensei',
+  'Lead AI',
+  'Crowd Monitoring System',
+  'TalentRadar',
+  'NYU Enrolls',
+  'Parade Cam',
+];
+
 export const projects = [
   {
     id: 4,
@@ -460,7 +470,7 @@ export const projects = [
       },
     },
   },
-];
+].sort((a, b) => projectOrder.indexOf(a.title) - projectOrder.indexOf(b.title));
 
 export function getProjectBySlug(slug) {
   return projects.find((project) => project.slug === slug);

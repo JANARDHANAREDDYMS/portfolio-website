@@ -6,12 +6,14 @@ import Skills from './pages/Skills';
 import Contact from './pages/Contact';
 import ProjectDetail from './pages/ProjectDetail';
 import Resume from './pages/Resume';
+import Publications from './pages/Publications';
 
 function Home() {
   return (
     <>
       <Hero />
       <Projects />
+      <Publications />
       <Experience />
       <Skills />
       <Contact />

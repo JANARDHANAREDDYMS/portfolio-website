@@ -1,1 +1,8 @@
 /* App-specific styles - using Tailwind for most styling */
+.experience-scroll {
+  scrollbar-width: none;
+}
+
+.experience-scroll::-webkit-scrollbar {
+  display: none;
+}

@@ -216,7 +216,13 @@ import { projects } from '../data/projects';
     return (
       <section id="projects" className="px-4 py-12 md:px-16 lg:px-24 lg:py-20" style={{ backgroundColor: '#F3EDE5' }}>
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-8 text-4xl font-bold text-gray-900 md:text-5xl">Projects</h2>
+          <div className="mb-14">
+            <p className="mb-2 text-xs tracking-widest text-gray-500 uppercase">Projects</p>
+            <h2 className="text-3xl font-semibold md:text-4xl">
+              <span style={{ color: '#4A90D9' }}>Selected </span>
+              <span className="text-gray-900">Projects</span>
+            </h2>
+          </div>
 
           <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
             <div className="flex gap-3 overflow-x-auto pb-2 lg:w-[15%] lg:min-w-[170px] lg:flex-col lg:justify-center lg:overflow-visible lg:pb-0">

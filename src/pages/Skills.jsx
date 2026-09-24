@@ -89,7 +89,6 @@ function Skills() {
         { name: 'Docker', proficiency: 4 },
         { name: 'Kubernetes', proficiency: 3 },
         { name: 'Git', proficiency: 5 },
-        { name: 'Linux', proficiency: 4 },
       ],
     },
     {
