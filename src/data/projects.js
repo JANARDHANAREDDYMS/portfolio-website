@@ -206,7 +206,7 @@ export const projects = [
     tech: ['PyTorch', 'Spark', 'Delta Lake', 'FastAPI', 'LangGraph', 'Kafka', 'MLflow', 'pgvector'],
     color: '#5B5F97',
     assetsBase: '/projects/projectcerebro',
-    demoVideo: 'https://youtu.be/gODvKyDaOHo',
+    demoVideo: 'https://youtu.be/WWUBNFFCZw0',
     architectureImage: '/projects/projectcerebro/projectcerebro_architecture.html',
     pipelineDiagram: '/projects/projectcerebro/spark_pipeline_diagram_1.html',
     sourceCode: 'https://github.com/JANARDHANAREDDYMS/projectcerebro',
