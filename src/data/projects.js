@@ -315,7 +315,6 @@ export const projects = [
     tech: ['FastAPI', 'LangGraph', 'PostgreSQL', 'React', 'Vite'],
     color: '#8A5A44',
     assetsBase: '/projects/lead-ai',
-    demoVideo: 'https://youtu.be/HjB5horbqjc',
     architectureImage: '/projects/lead-ai/leadOS_system_architecture_v2.svg',
     pipelineDiagram: '/projects/lead-ai/leadOS_pipeline_animated.html',
     sourceCode: 'https://github.com/JANARDHANAREDDYMS/LeadAI',
