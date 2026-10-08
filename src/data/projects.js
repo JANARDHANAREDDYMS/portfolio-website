@@ -88,6 +88,7 @@ const talentRadarProject = {
 const projectOrder = [
   'ProjectCerebro',
   'Code Sensei',
+  'Par$e',
   'Lead AI',
   'Crowd Monitoring System',
   'TalentRadar',
@@ -96,6 +97,97 @@ const projectOrder = [
 ];
 
 export const projects = [
+  {
+    id: 8,
+    slug: 'parse',
+    title: 'Par$e',
+    date: 'Sep 2026',
+    repo: 'https://github.com/JANARDHANAREDDYMS/Parse',
+    description:
+      'Built an evidence-backed order-form extraction system that turns tenant-scoped PDFs and SKU catalogs into validated, auditable order data.',
+    bullets: [
+      'Built an asynchronous FastAPI and PostgreSQL pipeline that preprocesses PDFs, extracts document structure, and uses OCR only when deterministic quality checks call for it.',
+      'Added focused Claude agents for document analysis, SKU mapping, term triage, and commercial-term applicability, with narrow typed evidence retrieval tools and guarded finalization.',
+      'Implemented deterministic normalization, provenance tracking, conservative term inheritance, reconciliation, and bounded semantic review so uncertain values remain explicit instead of being guessed.',
+      'Evaluated the full pipeline against 50 held-out forms: 100% SKU precision, 87.9% SKU recall, and 100% accuracy on quantity, currency, unit price, listed value, service dates, and payment terms for matched items.',
+    ],
+    tech: ['Python', 'FastAPI', 'PostgreSQL', 'Claude', 'React', 'PyMuPDF', 'Tesseract'],
+    color: '#596B63',
+    assetsBase: '/projects/parse',
+    architectureImage: '/projects/parse/parse_architecture.svg',
+    sourceCode: 'https://github.com/JANARDHANAREDDYMS/Parse',
+    documentation: 'https://github.com/JANARDHANAREDDYMS/Parse/blob/main/README.md',
+    resources: [
+      {
+        label: 'Source Code',
+        href: 'https://github.com/JANARDHANAREDDYMS/Parse',
+        description: 'Full implementation, migrations, evaluation scripts, and dashboard.',
+      },
+      {
+        label: 'Project README',
+        href: 'https://github.com/JANARDHANAREDDYMS/Parse/blob/main/README.md',
+        description: 'Setup instructions, pipeline walkthrough, API usage, and benchmark results.',
+      },
+      {
+        label: 'Architecture Diagram',
+        href: '/projects/parse/parse_architecture.svg',
+        description: 'Full system flow from PDF upload through persisted extraction and tenant-scoped results.',
+      },
+      {
+        label: 'Architecture and Decision Notes',
+        href: 'https://github.com/JANARDHANAREDDYMS/Parse/blob/main/PROJECT_NOTES.md',
+        description: 'Architecture decisions, subsystem boundaries, evaluation findings, and implementation log.',
+      },
+      {
+        label: 'Evaluation Results',
+        href: 'https://github.com/JANARDHANAREDDYMS/Parse#results-and-accuracy',
+        description: 'Full 50-document evaluation metrics, field accuracy, and known failure cases.',
+      },
+    ],
+    detail: {
+      headline: 'An evidence-backed PDF order-form pipeline that produces tenant-scoped, validated, and auditable normalized results.',
+      overview: [
+        'Par$e is a pipeline that reads a PDF order form and tells you what the customer actually bought, with proof. I built it around one rule: the model never gets the final word on its own. Plain code pulls the text, tables, and page images out of the PDF. Claude agents then read that saved evidence and make the judgment calls, like which catalog product a line item is. Code handles the rest: looking things up, checking the math, and saving results. Every accepted value can be traced back to where it came from in the document. If the system can\'t be sure, it flags the item for review instead of making something up.',
+        'I chose a queue with workers, handlers, and a dispatcher over one large in-process workflow so scaling can start with more workers. Each stage runs as a job in a durable PostgreSQL queue. If a worker fails, the job can be retried without restarting the whole document, and independent work such as SKU mapping can fan out across workers. I ran all 50 held-out documents through the real API with several workers at once. That surfaced timeouts under concurrent load, so I added one automatic retry for document-analysis timeouts.',
+        'I haven\'t load-tested Par$e with thousands of documents. At that scale, I expect Claude API rate limits and cost to be the first constraints, followed by PostgreSQL queue capacity; I would likely move to a dedicated broker if the queue became a bottleneck. The system is designed to scale horizontally by adding workers, but before production I would add upload idempotency and retries for the later stages.',
+      ],
+      achievement:
+        'On the 50-document held-out evaluation, matched SKU predictions reached 100% precision. Quantity, currency, unit price, total listed value, service dates, and payment terms each reached 100% field accuracy across matched items. The system also records incomplete runs and uncertainty as explicit business outcomes.',
+      architecture:
+        'The full-screen diagram follows a PDF from the React dashboard into FastAPI, then through a durable PostgreSQL job queue and coordinated generic workers. Preprocessing persists a validated document representation; document analysis schedules SKU mapping and term enrichment in parallel; normalization joins their terminal results, applies deterministic rules, and persists a versioned result for the tenant-scoped API. Object storage holds source PDFs, renders, and canonical artifacts. Agents retrieve only bounded evidence through typed tools.',
+      demo:
+        'A demo video will be added here. The walkthrough will show PDF upload, pipeline progress, evidence-backed stage results, and the final normalized order form.',
+      docs: [
+        'PDF preprocessing and evidence inventory',
+        'Document analysis and SKU mapping',
+        'Term triage and commercial enrichment',
+        'Normalization, validation, and semantic review',
+        'Persistence, tenant isolation, and evaluation',
+      ],
+      docDetails: {
+        'PDF preprocessing and evidence inventory': [
+          'The preprocessing handler validates the PDF, extracts native text, positioned layout blocks, and tables, renders each page, and evaluates whether OCR is needed. Native and OCR representations remain separate, and every block and table receives a stable identifier for later evidence references.',
+          'The canonical result is validated, compressed, checksummed, persisted, and reloaded before downstream analysis. Temporary local paths are not persisted or exposed; storage references are relative object keys.',
+        ],
+        'Document analysis and SKU mapping': [
+          'Document analysis uses narrow retrieval tools for the document overview, search, selected page text, blocks, tables, renders, and evidence regions. It identifies product candidates, commercial status, raw terms, contract structure, and evidence without receiving unrestricted filesystem, SQL, or full-document access.',
+          'Each eligible purchased or included candidate receives a tenant-scoped SKU mapping job. Deterministic retrieval builds a shortlist, then Claude returns MATCH, NO_MATCH, or AMBIGUOUS with cited evidence and catalog-version identity. Server-side validation guards finalization.',
+        ],
+        'Term triage and commercial enrichment': [
+          'A compact triage pass classifies every raw term as document metadata, potentially line-item relevant, or uncertain. Potential and uncertain terms proceed to applicability reasoning; metadata remains preserved in the source analysis and is not misrepresented as an attempted attribution.',
+          'The applicability stage uses targeted evidence retrieval to resolve document-wide, candidate-specific, or unknown scope and to extract raw commercial facts. Unknown is a valid outcome when evidence does not support a safe conclusion.',
+        ],
+        'Normalization, validation, and semantic review': [
+          'Normalization waits until SKU mapping and term enrichment are terminal. Deterministic parsing handles supported money, dates, quantities, enums, inheritance, and Decimal reconciliation; field provenance records whether each value was extracted, inherited, or derived.',
+          'A bounded, read-only semantic review considers only selected ambiguity or scope issues. It cannot override deterministic arithmetic or apply unsupported corrections. Results distinguish completed, review_required, and failed_validation business states.',
+        ],
+        'Persistence, tenant isolation, and evaluation': [
+          'PostgreSQL stores the durable processing queue, run lineage, and relational projections. Object storage holds PDFs, page renders, and compressed canonical artifacts. organization_id scopes records, reads, tools, and API results; versioned runs preserve audit history.',
+          'The evaluation harness uploads all 50 PDFs through the real API and compares outputs with held-out ground truth only after processing. The reported run achieved 100% SKU precision and 87.9% SKU recall; seven documents did not complete normalization because of timeouts, invalid agent output, or a harness shutdown timing issue.',
+        ],
+      },
+    },
+  },
   {
     id: 4,
     slug: 'projectcerebro',

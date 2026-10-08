@@ -1,0 +1,271 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1942" height="2164" viewBox="0 0 1942 2164" font-family="Liberation Sans, Arial, Helvetica, sans-serif">
+<defs>
+<marker id="m_flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#444441" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="m_amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#BA7517" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="m_disp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#9A9890" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="1942" height="2164" fill="#FFFFFF"/>
+<text x="70" y="42" font-size="26" font-weight="700" fill="#2C2C2A">Par$e: order-form extraction architecture</text>
+<text x="70" y="66" font-size="14" fill="#5F5E5A">PDF upload to an auditable, evidence-backed result. PostgreSQL is the job queue, workers run stage handlers, Claude agents only use narrow typed tools.</text>
+<rect x="70.0" y="636.0" width="370.0" height="284.0" rx="10" fill="none" stroke="#888780" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="86.0" y="906.0" font-size="16" font-weight="700" fill="#2C2C2A">Generic worker process (start 1 to N copies)</text>
+<rect x="70.0" y="90.0" width="370.0" height="80" rx="6" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="84.0" y="116.0" font-size="15" font-weight="700" fill="#2C2C2A">Client and React dashboard</text>
+<text x="84.0" y="137.0" font-size="13" fill="#5F5E5A">uploads PDFs</text>
+<text x="84.0" y="155.0" font-size="13" fill="#5F5E5A">polls active documents every 2 seconds</text>
+<rect x="70.0" y="254.0" width="370.0" height="116" rx="6" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="84.0" y="280.0" font-size="15" font-weight="700" fill="#2C2C2A">FastAPI</text>
+<text x="84.0" y="301.0" font-size="13" fill="#5F5E5A">validates the request and tenant</text>
+<text x="84.0" y="319.0" font-size="13" fill="#5F5E5A">stores the source PDF under a relative key</text>
+<text x="84.0" y="337.0" font-size="13" fill="#5F5E5A">creates a document_preprocessing job</text>
+<text x="84.0" y="355.0" font-size="13" fill="#5F5E5A">serves tenant-scoped status and results</text>
+<rect x="70.0" y="440.0" width="370.0" height="116" rx="6" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="84.0" y="466.0" font-size="15" font-weight="700" fill="#2C2C2A">PostgreSQL processing_jobs queue</text>
+<text x="84.0" y="487.0" font-size="13" fill="#5F5E5A">durable job queue: queued, claimed,</text>
+<text x="84.0" y="505.0" font-size="13" fill="#5F5E5A">running, terminal</text>
+<text x="84.0" y="523.0" font-size="13" fill="#5F5E5A">partial unique indexes allow only one</text>
+<text x="84.0" y="541.0" font-size="13" fill="#5F5E5A">active job per target (idempotent)</text>
+<rect x="86.0" y="654.0" width="338.0" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="100.0" y="680.0" font-size="15" font-weight="700" fill="#085041">WorkerRunner</text>
+<text x="100.0" y="701.0" font-size="13" fill="#0F6E56">claims jobs with FOR UPDATE SKIP LOCKED</text>
+<text x="100.0" y="719.0" font-size="13" fill="#0F6E56">owns generic job status; handlers own</text>
+<text x="100.0" y="737.0" font-size="13" fill="#0F6E56">their own domain run status</text>
+<rect x="86.0" y="796.0" width="338.0" height="80" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="100.0" y="822.0" font-size="15" font-weight="700" fill="#085041">JobDispatcher</text>
+<text x="100.0" y="843.0" font-size="13" fill="#0F6E56">maps job_type to a handler</text>
+<text x="100.0" y="861.0" font-size="13" fill="#0F6E56">plain Python component, not an agent</text>
+<rect x="70.0" y="966.0" width="370.0" height="98" rx="6" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="84.0" y="992.0" font-size="15" font-weight="700" fill="#2C2C2A">PostgreSQL run tables and projections</text>
+<text x="84.0" y="1013.0" font-size="13" fill="#5F5E5A">versioned run per stage, linked by document_id</text>
+<text x="84.0" y="1031.0" font-size="13" fill="#5F5E5A">organization_id on every row (composite FKs)</text>
+<text x="84.0" y="1049.0" font-size="13" fill="#5F5E5A">each stage persists, then reload-validates</text>
+<rect x="70.0" y="1098.0" width="370.0" height="80" rx="6" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="84.0" y="1124.0" font-size="15" font-weight="700" fill="#2C2C2A">Object storage</text>
+<text x="84.0" y="1145.0" font-size="13" fill="#5F5E5A">source PDFs and page renders</text>
+<text x="84.0" y="1163.0" font-size="13" fill="#5F5E5A">compressed canonical artifacts</text>
+<rect x="70.0" y="1212.0" width="370.0" height="80" rx="6" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="84.0" y="1238.0" font-size="15" font-weight="700" fill="#2C2C2A">Tenant SKU catalog</text>
+<text x="84.0" y="1259.0" font-size="13" fill="#5F5E5A">versioned snapshots (catalog_version_id)</text>
+<text x="84.0" y="1277.0" font-size="13" fill="#5F5E5A">read by the SKU retriever</text>
+<path d="M185.0 170.0 L185.0 254.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<text x="177.0" y="216.0" text-anchor="end" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">upload PDF</text>
+<path d="M325.0 254.0 L325.0 170.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<text x="333.0" y="216.0" text-anchor="start" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">poll status every 2 s</text>
+<path d="M255.0 370.0 L255.0 440.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<text x="265.0" y="409.0" text-anchor="start" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">create document_preprocessing job</text>
+<path d="M185.0 556.0 L185.0 654.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<text x="177.0" y="600.0" text-anchor="end" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">claim job</text>
+<path d="M325.0 654.0 L325.0 556.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<text x="333.0" y="600.0" text-anchor="start" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">report status, poll</text>
+<path d="M255.0 752.0 L255.0 796.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<rect x="540.0" y="90.0" width="1352.1" height="200.0" rx="10" fill="none" stroke="#888780" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="556.0" y="116.0" font-size="16" font-weight="700" fill="#2C2C2A">1. DocumentPreprocessingHandler   [job_type: document_preprocessing, deterministic, no LLM]</text>
+<rect x="540.0" y="318.0" width="1352.1" height="424.0" rx="10" fill="none" stroke="#888780" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="556.0" y="344.0" font-size="16" font-weight="700" fill="#2C2C2A">2. DocumentAnalysisHandler   [job_type: document_analysis]</text>
+<rect x="540.0" y="770.0" width="1352.1" height="336.0" rx="10" fill="none" stroke="#888780" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="556.0" y="796.0" font-size="16" font-weight="700" fill="#2C2C2A">3a. SkuMappingHandler   [job_type: sku_mapping, one job per eligible candidate, many in parallel]</text>
+<rect x="540.0" y="1134.0" width="1352.1" height="354.0" rx="10" fill="none" stroke="#888780" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="556.0" y="1160.0" font-size="16" font-weight="700" fill="#2C2C2A">3b. TermApplicabilityHandler   [job_type: term_applicability, one job per analysis run, parallel with 3a]</text>
+<rect x="540.0" y="1516.0" width="1352.1" height="518.0" rx="10" fill="none" stroke="#888780" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="556.0" y="1542.0" font-size="16" font-weight="700" fill="#2C2C2A">4. NormalizationHandler   [job_type: normalization, fan-in after 3a and 3b]</text>
+<rect x="564.0" y="146.0" width="168.8" height="80" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="578.0" y="172.0" font-size="15" font-weight="700" fill="#085041">Inspect PDF</text>
+<text x="578.0" y="193.0" font-size="13" fill="#0F6E56">native text extraction</text>
+<text x="578.0" y="211.0" font-size="13" fill="#0F6E56">layout blocks and tables</text>
+<rect x="790.8" y="146.0" width="189.0" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="804.8" y="172.0" font-size="15" font-weight="700" fill="#085041">Render pages</text>
+<text x="804.8" y="193.0" font-size="13" fill="#0F6E56">page renders for evidence</text>
+<text x="804.8" y="211.0" font-size="13" fill="#0F6E56">OCR (Tesseract) only when</text>
+<text x="804.8" y="229.0" font-size="13" fill="#0F6E56">native text is not enough</text>
+<rect x="1037.8" y="146.0" width="244.4" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1051.8" y="172.0" font-size="15" font-weight="700" fill="#085041">PreprocessedDocument</text>
+<text x="1051.8" y="193.0" font-size="13" fill="#0F6E56">persisted and reload-validated</text>
+<text x="1051.8" y="211.0" font-size="13" fill="#0F6E56">page inventory, text/table/block views</text>
+<text x="1051.8" y="229.0" font-size="13" fill="#0F6E56">renders and evidence locators</text>
+<rect x="564.0" y="410.0" width="271.7" height="98" rx="6" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="578.0" y="436.0" font-size="15" font-weight="700" fill="#3C3489">DocumentAnalysisAgent (Claude)</text>
+<text x="578.0" y="457.0" font-size="13" fill="#534AB7">extracts product candidates, commercial</text>
+<text x="578.0" y="475.0" font-size="13" fill="#534AB7">status, raw terms and evidence</text>
+<text x="578.0" y="493.0" font-size="13" fill="#534AB7">does not reason about applicability</text>
+<rect x="905.7" y="410.0" width="228.4" height="116" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="919.7" y="436.0" font-size="15" font-weight="700" fill="#085041">finalize_document_analysis</text>
+<text x="919.7" y="457.0" font-size="13" fill="#0F6E56">only valid completion path</text>
+<text x="919.7" y="475.0" font-size="13" fill="#0F6E56">server injects trusted IDs</text>
+<text x="919.7" y="493.0" font-size="13" fill="#0F6E56">checks cited evidence IDs belong</text>
+<text x="919.7" y="511.0" font-size="13" fill="#0F6E56">to this document and run</text>
+<rect x="1192.1" y="410.0" width="254.0" height="116" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1206.1" y="436.0" font-size="15" font-weight="700" fill="#085041">DocumentAnalysisResult</text>
+<text x="1206.1" y="457.0" font-size="13" fill="#0F6E56">contract and pricing structure</text>
+<text x="1206.1" y="475.0" font-size="13" fill="#0F6E56">ProductCandidates, CommercialStatus</text>
+<text x="1206.1" y="493.0" font-size="13" fill="#0F6E56">raw GlobalTerms, evidence references</text>
+<text x="1206.1" y="511.0" font-size="13" fill="#0F6E56">persisted and reload-validated</text>
+<rect x="1504.2" y="410.0" width="255.5" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1518.2" y="436.0" font-size="15" font-weight="700" fill="#085041">SkuMappingEligibilityPolicy</text>
+<text x="1518.2" y="457.0" font-size="13" fill="#0F6E56">purchased / included: schedule job</text>
+<text x="1518.2" y="475.0" font-size="13" fill="#0F6E56">optional / excluded / mentioned: skip</text>
+<text x="1518.2" y="493.0" font-size="13" fill="#0F6E56">ambiguous: review, not auto-scheduled</text>
+<rect x="564.0" y="578.0" width="321.4" height="116" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="578.0" y="604.0" font-size="15" font-weight="700" fill="#085041">Narrow typed tools (read-only)</text>
+<text x="578.0" y="625.0" font-size="13" fill="#0F6E56">get_document_overview, search_document</text>
+<text x="578.0" y="643.0" font-size="13" fill="#0F6E56">get_page_text, get_page_blocks, get_page_tables</text>
+<text x="578.0" y="661.0" font-size="13" fill="#0F6E56">get_page_render, get_evidence_region</text>
+<text x="578.0" y="679.0" font-size="13" fill="#0F6E56">no direct PDF, filesystem or SQL access</text>
+<rect x="905.7" y="578.0" width="261.0" height="98" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.2"/>
+<text x="919.7" y="604.0" font-size="15" font-weight="700" fill="#633806">Retry rules</text>
+<text x="919.7" y="625.0" font-size="13" fill="#854F0B">timeout: automatic retry, max 2 attempts</text>
+<text x="919.7" y="643.0" font-size="13" fill="#854F0B">invalid output after the one correction:</text>
+<text x="919.7" y="661.0" font-size="13" fill="#854F0B">run fails, never retried blindly</text>
+<rect x="564.0" y="828.0" width="280.1" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="578.0" y="854.0" font-size="15" font-weight="700" fill="#085041">Hybrid SKU retriever</text>
+<text x="578.0" y="875.0" font-size="13" fill="#0F6E56">exact / alias and lexical search</text>
+<text x="578.0" y="893.0" font-size="13" fill="#0F6E56">scoped by organization and catalog version</text>
+<text x="578.0" y="911.0" font-size="13" fill="#0F6E56">returns a scored shortlist</text>
+<rect x="902.1" y="828.0" width="276.5" height="80" rx="6" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="916.1" y="854.0" font-size="15" font-weight="700" fill="#3C3489">SkuMappingAgent (Claude)</text>
+<text x="916.1" y="875.0" font-size="13" fill="#534AB7">compares the shortlist with the candidate's</text>
+<text x="916.1" y="893.0" font-size="13" fill="#534AB7">document evidence and commercial status</text>
+<rect x="1236.6" y="828.0" width="266.4" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1250.6" y="854.0" font-size="15" font-weight="700" fill="#085041">submit_sku_mapping_decision</text>
+<text x="1250.6" y="875.0" font-size="13" fill="#0F6E56">called exactly once, only completion path</text>
+<text x="1250.6" y="893.0" font-size="13" fill="#0F6E56">MATCH / NO_MATCH / AMBIGUOUS</text>
+<text x="1250.6" y="911.0" font-size="13" fill="#0F6E56">all three finish as completed jobs</text>
+<rect x="1561.0" y="828.0" width="252.6" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1575.0" y="854.0" font-size="15" font-weight="700" fill="#085041">sku_mapping_runs and artifact</text>
+<text x="1575.0" y="875.0" font-size="13" fill="#0F6E56">shortlist scores, cited evidence</text>
+<text x="1575.0" y="893.0" font-size="13" fill="#0F6E56">catalog_version_id always stored</text>
+<text x="1575.0" y="911.0" font-size="13" fill="#0F6E56">supersedes_mapping_run_id lineage</text>
+<rect x="902.1" y="978.0" width="276.5" height="80" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="916.1" y="1004.0" font-size="15" font-weight="700" fill="#085041">Narrow typed tools (read-only)</text>
+<text x="916.1" y="1025.0" font-size="13" fill="#0F6E56">retrieve_skus</text>
+<text x="916.1" y="1043.0" font-size="13" fill="#0F6E56">get_authoritative_sku</text>
+<rect x="564.0" y="1192.0" width="283.0" height="98" rx="6" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="578.0" y="1218.0" font-size="15" font-weight="700" fill="#3C3489">Stage 1: TermTriageAgent (Claude)</text>
+<text x="578.0" y="1239.0" font-size="13" fill="#534AB7">labels every raw term: document_metadata,</text>
+<text x="578.0" y="1257.0" font-size="13" fill="#534AB7">potential_line_item or uncertain</text>
+<text x="578.0" y="1275.0" font-size="13" fill="#534AB7">no evidence tools; finalize_term_triage</text>
+<rect x="905.0" y="1192.0" width="184.7" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="919.0" y="1218.0" font-size="15" font-weight="700" fill="#085041">Handoff gate</text>
+<text x="919.0" y="1239.0" font-size="13" fill="#0F6E56">drops document_metadata</text>
+<text x="919.0" y="1257.0" font-size="13" fill="#0F6E56">keeps potential_line_item</text>
+<text x="919.0" y="1275.0" font-size="13" fill="#0F6E56">and uncertain terms</text>
+<rect x="1147.7" y="1192.0" width="324.0" height="98" rx="6" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="1161.7" y="1218.0" font-size="15" font-weight="700" fill="#3C3489">Stage 2: TermApplicabilityAgent (Claude)</text>
+<text x="1161.7" y="1239.0" font-size="13" fill="#534AB7">resolves scope: document / candidate / unknown</text>
+<text x="1161.7" y="1257.0" font-size="13" fill="#534AB7">extracts raw candidate commercial facts</text>
+<text x="1161.7" y="1275.0" font-size="13" fill="#534AB7">finalize_term_applicability</text>
+<rect x="1529.6" y="1192.0" width="241.8" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1543.6" y="1218.0" font-size="15" font-weight="700" fill="#085041">Term-enrichment run</text>
+<text x="1543.6" y="1239.0" font-size="13" fill="#0F6E56">applicability decisions</text>
+<text x="1543.6" y="1257.0" font-size="13" fill="#0F6E56">candidate fact bundles</text>
+<text x="1543.6" y="1275.0" font-size="13" fill="#0F6E56">coverage declarations, evidence refs</text>
+<rect x="1147.7" y="1342.0" width="324.0" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1161.7" y="1368.0" font-size="15" font-weight="700" fill="#085041">Narrow typed tools (read-only)</text>
+<text x="1161.7" y="1389.0" font-size="13" fill="#0F6E56">get_term_context, get_candidate_context</text>
+<text x="1161.7" y="1407.0" font-size="13" fill="#0F6E56">get_term_evidence_region</text>
+<text x="1161.7" y="1425.0" font-size="13" fill="#0F6E56">get_candidate_evidence_region</text>
+<rect x="564.0" y="1342.0" width="258.4" height="80" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.2"/>
+<text x="578.0" y="1368.0" font-size="15" font-weight="700" fill="#633806">Retry rules</text>
+<text x="578.0" y="1389.0" font-size="13" fill="#854F0B">term_applicability timeout: no automatic</text>
+<text x="578.0" y="1407.0" font-size="13" fill="#854F0B">retry at this stage yet (fails validation)</text>
+<rect x="564.0" y="1574.0" width="253.4" height="80" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="578.0" y="1600.0" font-size="15" font-weight="700" fill="#085041">Idempotent fan-in service</text>
+<text x="578.0" y="1621.0" font-size="13" fill="#0F6E56">schedules normalization only when the</text>
+<text x="578.0" y="1639.0" font-size="13" fill="#0F6E56">SKU and term branches are terminal</text>
+<rect x="875.4" y="1574.0" width="256.7" height="80" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="889.4" y="1600.0" font-size="15" font-weight="700" fill="#085041">Trusted input assembly</text>
+<text x="889.4" y="1621.0" font-size="13" fill="#0F6E56">analysis + current SKU runs + term run</text>
+<text x="889.4" y="1639.0" font-size="13" fill="#0F6E56">only a MATCH yields a line-item bundle</text>
+<rect x="1190.1" y="1574.0" width="241.8" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1204.1" y="1600.0" font-size="15" font-weight="700" fill="#085041">Deterministic normalization</text>
+<text x="1204.1" y="1621.0" font-size="13" fill="#0F6E56">money, date, quantity, enum parsing</text>
+<text x="1204.1" y="1639.0" font-size="13" fill="#0F6E56">Decimal arithmetic and reconciliation</text>
+<text x="1204.1" y="1657.0" font-size="13" fill="#0F6E56">no invented defaults</text>
+<rect x="1489.8" y="1574.0" width="245.1" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1503.8" y="1600.0" font-size="15" font-weight="700" fill="#085041">Conservative term inheritance</text>
+<text x="1503.8" y="1621.0" font-size="13" fill="#0F6E56">candidate facts win first, then</text>
+<text x="1503.8" y="1639.0" font-size="13" fill="#0F6E56">candidate-scoped terms, then exact</text>
+<text x="1503.8" y="1657.0" font-size="13" fill="#0F6E56">document-term aliases</text>
+<rect x="564.0" y="1750.0" width="303.3" height="98" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="578.0" y="1776.0" font-size="15" font-weight="700" fill="#085041">Finalization gate</text>
+<text x="578.0" y="1797.0" font-size="13" fill="#0F6E56">re-checks lineage, provenance, SKU identity</text>
+<text x="578.0" y="1815.0" font-size="13" fill="#0F6E56">READY_FOR_SEMANTIC_REVIEW,</text>
+<text x="578.0" y="1833.0" font-size="13" fill="#0F6E56">REVIEW_REQUIRED or FAILED_VALIDATION</text>
+<rect x="977.3" y="1750.0" width="259.1" height="98" rx="6" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="991.3" y="1776.0" font-size="15" font-weight="700" fill="#3C3489">Semantic review agent (Claude)</text>
+<text x="991.3" y="1797.0" font-size="13" fill="#534AB7">only explicitly queued ambiguity items</text>
+<text x="991.3" y="1815.0" font-size="13" fill="#534AB7">read-only: cannot change values</text>
+<text x="991.3" y="1833.0" font-size="13" fill="#534AB7">finalize_normalization_semantic_review</text>
+<rect x="1306.5" y="1750.0" width="256.1" height="116" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="1320.5" y="1776.0" font-size="15" font-weight="700" fill="#085041">FinalOrderFormExtraction</text>
+<text x="1320.5" y="1797.0" font-size="13" fill="#0F6E56">normalized line items, field provenance</text>
+<text x="1320.5" y="1815.0" font-size="13" fill="#0F6E56">review issues, semantic findings</text>
+<text x="1320.5" y="1833.0" font-size="13" fill="#0F6E56">COMPLETED / REVIEW_REQUIRED /</text>
+<text x="1320.5" y="1851.0" font-size="13" fill="#0F6E56">FAILED_VALIDATION</text>
+<rect x="1620.5" y="1750.0" width="241.5" height="98" rx="6" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="1634.5" y="1776.0" font-size="15" font-weight="700" fill="#2C2C2A">Canonical result and API</text>
+<text x="1634.5" y="1797.0" font-size="13" fill="#5F5E5A">compressed artifact plus relational</text>
+<text x="1634.5" y="1815.0" font-size="13" fill="#5F5E5A">projections, tenant-scoped</text>
+<text x="1634.5" y="1833.0" font-size="13" fill="#5F5E5A">GET .../documents/{id}/normalization</text>
+<rect x="977.3" y="1918.0" width="259.1" height="80" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="991.3" y="1944.0" font-size="15" font-weight="700" fill="#085041">Narrow typed tools (read-only)</text>
+<text x="991.3" y="1965.0" font-size="13" fill="#0F6E56">get_review_item_context</text>
+<text x="991.3" y="1983.0" font-size="13" fill="#0F6E56">get_review_item_evidence</text>
+<path d="M732.8 186.0 L790.8 195.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M979.8 195.0 L1037.8 195.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M835.7 459.0 L905.7 468.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1134.1 468.0 L1192.1 468.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1446.2 468.0 L1504.2 459.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M699.8 508.0 L699.8 578.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-start="url(#m_flow)" marker-end="url(#m_flow)"/>
+<text x="709.8" y="547.0" text-anchor="start" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">tool-call loop</text>
+<path d="M1019.9 410.0 L1019.9 384.0 L739.8 384.0 L739.8 410.0" fill="none" stroke="#BA7517" stroke-width="1.7" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#m_amber)"/>
+<text x="879.9" y="377.0" text-anchor="middle" font-size="12" font-weight="400" fill="#854F0B" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">rejected: one bounded correction attempt</text>
+<path d="M844.1 877.0 L902.1 868.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1178.6 868.0 L1236.6 877.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1503.0 877.0 L1561.0 877.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1040.4 908.0 L1040.4 978.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-start="url(#m_flow)" marker-end="url(#m_flow)"/>
+<text x="1050.4" y="947.0" text-anchor="start" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">tool-call loop</text>
+<path d="M847.0 1241.0 L905.0 1241.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1089.7 1241.0 L1147.7 1241.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1471.6 1241.0 L1529.6 1241.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1309.6 1290.0 L1309.6 1342.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-start="url(#m_flow)" marker-end="url(#m_flow)"/>
+<text x="1319.6" y="1320.0" text-anchor="start" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">tool-call loop</text>
+<path d="M817.4 1614.0 L875.4 1614.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1132.1 1614.0 L1190.1 1623.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1431.8 1623.0 L1489.8 1623.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1612.4 1672.0 L1612.4 1711.0 L715.7 1711.0 L715.7 1750.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M867.3 1799.0 L977.3 1799.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1236.5 1799.0 L1306.5 1808.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<path d="M1562.5 1808.0 L1620.5 1799.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<text x="922.3" y="1791.0" text-anchor="middle" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">ambiguity items</text>
+<path d="M1106.9 1848.0 L1106.9 1918.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-start="url(#m_flow)" marker-end="url(#m_flow)"/>
+<text x="1116.9" y="1887.0" text-anchor="start" font-size="12" font-weight="400" fill="#444441" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">tool-call loop</text>
+<path d="M424.0 836.0 L464.0 836.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round"/>
+<path d="M464.0 186.0 L464.0 1614.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round"/>
+<path d="M464.0 186.0 L564.0 186.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_disp)"/>
+<path d="M464.0 459.0 L564.0 459.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_disp)"/>
+<path d="M464.0 877.0 L564.0 877.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_disp)"/>
+<path d="M464.0 1241.0 L564.0 1241.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_disp)"/>
+<path d="M464.0 1614.0 L564.0 1614.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_disp)"/>
+<path d="M1160.0 244.0 L1160.0 274.0 L490.0 274.0 L490.0 466.0 L440.0 466.0" fill="none" stroke="#BA7517" stroke-width="1.7" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#m_amber)"/>
+<text x="560.0" y="268.0" text-anchor="start" font-size="12" font-weight="400" fill="#854F0B" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">enqueue the document_analysis job</text>
+<path d="M1631.9 508.0 L1631.9 726.0 L490.0 726.0 L490.0 486.0 L440.0 486.0" fill="none" stroke="#BA7517" stroke-width="1.7" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#m_amber)"/>
+<text x="560.0" y="720.0" text-anchor="start" font-size="12" font-weight="400" fill="#854F0B" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">enqueue one sku_mapping job per eligible candidate and one term_applicability job</text>
+<path d="M1687.3 926.0 L1687.3 1090.0 L490.0 1090.0 L490.0 506.0 L440.0 506.0" fill="none" stroke="#BA7517" stroke-width="1.7" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#m_amber)"/>
+<text x="560.0" y="1084.0" text-anchor="start" font-size="12" font-weight="400" fill="#854F0B" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">fan-in check: normalization is enqueued once both branches are terminal</text>
+<path d="M1650.5 1290.0 L1650.5 1472.0 L490.0 1472.0 L490.0 526.0 L440.0 526.0" fill="none" stroke="#BA7517" stroke-width="1.7" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#m_amber)"/>
+<text x="560.0" y="1466.0" text-anchor="start" font-size="12" font-weight="400" fill="#854F0B" stroke="#FFFFFF" stroke-width="4" paint-order="stroke" stroke-linejoin="round">fan-in check: normalization is enqueued once both branches are terminal</text>
+<rect x="540" y="2094" width="18" height="18" rx="3" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="566" y="2108" font-size="13" fill="#2C2C2A">Claude agent</text>
+<rect x="683.375" y="2094" width="18" height="18" rx="3" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="709.375" y="2108" font-size="13" fill="#2C2C2A">deterministic code and tools</text>
+<rect x="910.5625" y="2094" width="18" height="18" rx="3" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="936.5625" y="2108" font-size="13" fill="#2C2C2A">infrastructure and storage</text>
+<rect x="1124.734375" y="2094" width="18" height="18" rx="3" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.2"/>
+<text x="1150.734375" y="2108" font-size="13" fill="#2C2C2A">retry and correction rules</text>
+<path d="M540.0 2132.0 L584.0 2132.0" fill="none" stroke="#444441" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_flow)"/>
+<text x="594" y="2136" font-size="13" fill="#2C2C2A">data flow inside a handler</text>
+<path d="M781.5 2132.0 L825.5 2132.0" fill="none" stroke="#9A9890" stroke-width="1.7" stroke-linejoin="round" marker-end="url(#m_disp)"/>
+<text x="835.484375" y="2136" font-size="13" fill="#2C2C2A">dispatch by job_type</text>
+<path d="M994.0 2132.0 L1038.0 2132.0" fill="none" stroke="#BA7517" stroke-width="1.7" stroke-linejoin="round" stroke-dasharray="6 4" marker-end="url(#m_amber)"/>
+<text x="1048.046875" y="2136" font-size="13" fill="#2C2C2A">enqueue a follow-up job, or a correction loop</text>
+</svg>

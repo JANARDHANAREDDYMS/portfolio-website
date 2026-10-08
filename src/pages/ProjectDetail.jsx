@@ -174,6 +174,29 @@ function ArchitecturePanel({ project }) {
   );
 }
 
+function ParseArchitectureScreen({ project }) {
+  return (
+    <section
+      className="relative left-1/2 mt-10 flex h-[100svh] min-h-[100svh] w-screen -translate-x-1/2 flex-col bg-white text-gray-950"
+      aria-labelledby="parse-architecture-title"
+    >
+      <div className="border-b border-gray-200 px-4 py-3 md:px-8">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">System architecture</p>
+          <h2 id="parse-architecture-title" className="text-lg font-bold md:text-xl">Par$e · PDF to auditable order form</h2>
+        </div>
+      </div>
+      <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto bg-white" aria-label="Scrollable full architecture diagram">
+        <img
+          src={project.architectureImage}
+          alt="Full Par$e system architecture, from PDF upload through processing workers, parallel analysis branches, normalization, persistence, and API results"
+          className="block h-auto w-full"
+        />
+      </div>
+    </section>
+  );
+}
+
 function DemoPanel({ project }) {
   if (project.pipelineDiagram?.endsWith('.html')) {
     return (
@@ -230,8 +253,8 @@ function ArchitectureModal({ project, onClose }) {
   const title = `${project.title} architecture diagram`;
 
   return (
-    <div className="fixed inset-0 z-50 bg-gray-950/70 px-4 py-6 md:px-8" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="mx-auto flex h-full max-w-7xl flex-col border border-gray-300 bg-[#F3EDE5] p-4 shadow-2xl md:p-5" style={{ borderRadius: '8px' }}>
+    <div className={`fixed inset-0 z-50 bg-gray-950/80 ${project.slug === 'parse' ? 'p-0' : 'px-4 py-6 md:px-8'}`} role="dialog" aria-modal="true" aria-label={title}>
+      <div className={`mx-auto flex h-full flex-col border border-gray-300 bg-[#F3EDE5] shadow-2xl ${project.slug === 'parse' ? 'w-full max-w-none p-3 md:p-5' : 'max-w-7xl p-4 md:p-5'}`} style={{ borderRadius: project.slug === 'parse' ? '0' : '8px' }}>
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Architecture</div>
@@ -248,11 +271,11 @@ function ArchitectureModal({ project, onClose }) {
           </button>
         </div>
 
-        <div className="mt-4 min-h-0 flex-1 overflow-auto border border-gray-200 bg-white" style={{ borderRadius: '8px' }}>
+        <div className={`mt-4 min-h-0 flex-1 border border-gray-200 bg-white ${project.slug === 'parse' ? 'overflow-x-hidden overflow-y-auto' : 'overflow-auto'}`} style={{ borderRadius: '8px' }}>
           {project.architectureImage.endsWith('.html') ? (
             <iframe src={project.architectureImage} title={title} className="h-full min-h-[720px] w-full" />
           ) : (
-            <img src={project.architectureImage} alt={title} className="h-auto min-w-[1200px] max-w-none" />
+            <img src={project.architectureImage} alt={title} className={`h-auto ${project.slug === 'parse' ? 'block w-full' : 'min-w-[1200px] max-w-none'}`} />
           )}
         </div>
       </div>
@@ -295,6 +318,9 @@ function ProjectDetail() {
   const project = getProjectBySlug(slug);
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
   const shouldShowAchievementBelowIntro = project?.slug === 'projectcerebro';
+  const overviewParagraphs = Array.isArray(project?.detail.overview)
+    ? project.detail.overview
+    : [project?.detail.overview];
 
   if (!project) {
     return <Navigate to="/" replace />;
@@ -318,7 +344,11 @@ function ProjectDetail() {
             </div>
             <h1 className="mt-5 text-4xl font-bold text-gray-950 md:text-6xl">{project.title}</h1>
             <p className="mt-5 max-w-3xl text-xl leading-relaxed text-gray-700">{project.detail.headline}</p>
-            <p className="mt-5 max-w-3xl leading-8 text-gray-700">{project.detail.overview}</p>
+            <div className="mt-5 max-w-3xl space-y-4 leading-8 text-gray-700">
+              {overviewParagraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
             {project.detail.achievement && !shouldShowAchievementBelowIntro && (
               <AchievementBlock project={project} className="mt-6 max-w-3xl" />
             )}
@@ -350,6 +380,11 @@ function ProjectDetail() {
                   <ExternalLinkIcon />
                 </a>
               )}
+              {project.slug === 'parse' && !project.demoVideo && (
+                <span className="inline-flex items-center gap-2 border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-500" style={{ borderRadius: '8px' }}>
+                  Demo video · coming soon
+                </span>
+              )}
               {project.architectureImage && (
                 <button
                   type="button"
@@ -380,14 +415,37 @@ function ProjectDetail() {
           </div>
         </section>
 
-        <section className={`mt-12 grid gap-6 ${project.slug === 'talentradar' ? '' : 'lg:grid-cols-2'}`}>
-          <ArchitecturePanel project={project} />
-          {project.slug !== 'talentradar' && <DemoPanel project={project} />}
-        </section>
+        {project.slug === 'parse' ? (
+          <ParseArchitectureScreen project={project} />
+        ) : (
+          <section className={`mt-12 grid gap-6 ${project.slug === 'talentradar' ? '' : 'lg:grid-cols-2'}`}>
+            <ArchitecturePanel project={project} />
+            {project.slug !== 'talentradar' && <DemoPanel project={project} />}
+          </section>
+        )}
 
-        <ResourceList resources={project.resources} />
+        {project.slug === 'parse' && (
+          <section className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3" aria-label="Architecture overview">
+            <div className="border border-gray-300 bg-white/55 p-4" style={{ borderRadius: '8px' }}>
+              <h2 className="text-base font-bold text-gray-950">Architecture at a glance</h2>
+              <p className="mt-2 text-sm leading-6 text-gray-700">{project.detail.architecture}</p>
+            </div>
+            {project.detail.docs.slice(0, 5).map((item) => (
+              <div key={item} className="border border-gray-300 bg-white/55 p-4" style={{ borderRadius: '8px' }}>
+                <h3 className="text-sm font-bold text-gray-950">{item}</h3>
+                <DocumentationDetail content={project.detail.docDetails?.[item]} />
+              </div>
+            ))}
+            <div className="border border-dashed border-gray-300 bg-white/55 p-4" style={{ borderRadius: '8px' }}>
+              <h3 className="text-sm font-bold text-gray-950">Demo video</h3>
+              <p className="mt-2 text-sm leading-6 text-gray-600">{project.detail.demo}</p>
+            </div>
+          </section>
+        )}
 
-        <section className="mt-8 border border-gray-300 bg-white/45 p-5 md:p-6" style={{ borderRadius: '8px' }}>
+        {project.slug !== 'parse' && <ResourceList resources={project.resources} />}
+
+        {project.slug !== 'parse' && <section className="mt-8 border border-gray-300 bg-white/45 p-5 md:p-6" style={{ borderRadius: '8px' }}>
           <h2 className="text-2xl font-bold text-gray-950">Detailed Documentation</h2>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             {project.detail.docs.map((item) => (
@@ -397,7 +455,7 @@ function ProjectDetail() {
               </div>
             ))}
           </div>
-        </section>
+        </section>}
       </div>
       {isArchitectureOpen && <ArchitectureModal project={project} onClose={() => setIsArchitectureOpen(false)} />}
     </main>
