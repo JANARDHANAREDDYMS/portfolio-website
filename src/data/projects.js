@@ -318,7 +318,6 @@ export const projects = [
     architectureImage: '/projects/lead-ai/leadOS_system_architecture_v2.svg',
     pipelineDiagram: '/projects/lead-ai/leadOS_pipeline_animated.html',
     sourceCode: 'https://github.com/JANARDHANAREDDYMS/LeadAI',
-    documentation: '/projects/lead-ai/LeadAI-WriteupSubmission-Janrdhan.pdf',
     resources: [
       {
         label: 'Source Code',
@@ -334,11 +333,6 @@ export const projects = [
         label: 'Lead Enrichment Pipeline',
         href: '/projects/lead-ai/leadOS_pipeline_animated.html',
         description: 'Animated HTML diagram for the Lead AI enrichment pipeline.',
-      },
-      {
-        label: 'Project Documentation',
-        href: '/projects/lead-ai/LeadAI-WriteupSubmission-Janrdhan.pdf',
-        description: 'Full Lead AI project writeup and submission document.',
       },
     ],
     detail: {
